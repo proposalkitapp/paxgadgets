@@ -60,10 +60,10 @@ export const brandConfig: BrandConfig = {
     footer: {
       shop: [
         { label: "All Products", href: "/shop" },
-        { label: "Power & Charging", href: "/categories/power-charging" },
-        { label: "Audio", href: "/categories/audio" },
-        { label: "Mobile Devices", href: "/categories/mobile-devices" },
-        { label: "Accessories", href: "/categories/accessories" },
+        { label: "Power & Charging", href: "/shop?category=power-charging" },
+        { label: "Audio", href: "/shop?category=audio" },
+        { label: "Mobile Devices", href: "/shop?category=mobile-devices" },
+        { label: "Accessories", href: "/shop?category=accessories" },
       ],
       support: [
         { label: "Contact Us", href: "/contact" },

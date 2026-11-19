@@ -2,12 +2,13 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { ShoppingBag, User, Search, Menu, X, ArrowUpRight } from "lucide-react";
 import { brandConfig } from "@/config/brand";
 import { useCart } from "@/context/CartContext";
 
 export default function Navbar() {
+  const router = useRouter();
   const pathname = usePathname();
   const { totalItems, setIsCartOpen } = useCart();
   const [isScrolled, setIsScrolled] = useState(false);
@@ -110,23 +111,34 @@ export default function Navbar() {
 
           {/* Quick Search Dropdown */}
           {searchOpen && (
-            <div className="mt-3 pt-3 border-t border-[#1f2026] flex items-center gap-3">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (searchQuery.trim()) {
+                  router.push(`/shop?q=${encodeURIComponent(searchQuery.trim())}`);
+                  setSearchOpen(false);
+                }
+              }}
+              className="mt-3 pt-3 border-t border-[#1f2026] flex items-center gap-3"
+            >
               <Search className="w-4 h-4 text-neutral-500" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search products, power banks, audio..."
+                aria-label="Search all products"
                 className="w-full bg-transparent text-sm text-neutral-200 placeholder-neutral-500 focus:outline-none"
                 autoFocus
               />
               <button
+                type="button"
                 onClick={() => setSearchOpen(false)}
                 className="text-xs text-neutral-500 hover:text-neutral-300"
               >
                 ESC
               </button>
-            </div>
+            </form>
           )}
         </div>
       </header>

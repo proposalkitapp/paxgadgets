@@ -1,19 +1,34 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect, Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Search, Filter, ShoppingBag, ArrowRight, Clock, Check } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import { Search, ShoppingBag, ArrowRight } from "lucide-react";
 import { products, categories } from "@/data/products";
 import { formatPrice } from "@/lib/utils";
 import { useCart } from "@/context/CartContext";
 
-export default function ShopPage() {
+function ShopContent() {
   const { addToCart } = useCart();
+  const searchParams = useSearchParams();
+
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [availabilityFilter, setAvailabilityFilter] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<string>("featured");
+
+  // Read URL query params on mount or when params change
+  useEffect(() => {
+    const categoryParam = searchParams.get("category");
+    if (categoryParam) {
+      setSelectedCategory(categoryParam);
+    }
+    const queryParam = searchParams.get("q");
+    if (queryParam) {
+      setSearchQuery(queryParam);
+    }
+  }, [searchParams]);
 
   const filteredProducts = useMemo(() => {
     return products
@@ -62,6 +77,7 @@ export default function ShopPage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search products..."
+                aria-label="Search catalogue products"
                 className="w-full bg-[#15161c] border border-[#252730] text-xs text-neutral-200 pl-9 pr-3.5 py-2.5 rounded-lg focus:outline-none focus:border-cyan-400"
               />
             </div>
@@ -71,6 +87,7 @@ export default function ShopPage() {
               <select
                 value={availabilityFilter}
                 onChange={(e) => setAvailabilityFilter(e.target.value)}
+                aria-label="Filter products by availability status"
                 className="bg-[#15161c] border border-[#252730] text-xs text-neutral-300 px-3 py-2.5 rounded-lg focus:outline-none"
               >
                 <option value="all">All Availability</option>
@@ -81,6 +98,7 @@ export default function ShopPage() {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
+                aria-label="Sort products by criteria"
                 className="bg-[#15161c] border border-[#252730] text-xs text-neutral-300 px-3 py-2.5 rounded-lg focus:outline-none"
               >
                 <option value="featured">Featured First</option>
@@ -129,8 +147,11 @@ export default function ShopPage() {
                 key={product.id}
                 className="rounded-2xl bg-[#0e0f13] border border-[#1d1f25] hover:border-[#2c2f38] transition-all flex flex-col justify-between overflow-hidden group"
               >
-                {/* Image Container */}
-                <div className="relative w-full aspect-[4/3] bg-[#090a0d] border-b border-[#181920] flex items-center justify-center p-6 overflow-hidden">
+                {/* Clickable Image Container */}
+                <Link
+                  href={`/products/${product.slug}`}
+                  className="relative w-full aspect-[4/3] bg-[#090a0d] border-b border-[#181920] flex items-center justify-center p-6 overflow-hidden block"
+                >
                   <Image
                     src={product.heroImage}
                     alt={product.name}
@@ -152,7 +173,7 @@ export default function ShopPage() {
                       {product.availabilityStatus}
                     </span>
                   </div>
-                </div>
+                </Link>
 
                 {/* Body Details */}
                 <div className="p-5 flex-1 flex flex-col justify-between">
@@ -160,9 +181,11 @@ export default function ShopPage() {
                     <span className="text-[10px] font-mono text-neutral-500 uppercase">
                       {product.category}
                     </span>
-                    <h3 className="text-sm font-bold text-white mt-1 group-hover:text-cyan-400 transition-colors line-clamp-1">
-                      {product.name}
-                    </h3>
+                    <Link href={`/products/${product.slug}`} className="block">
+                      <h2 className="text-sm font-bold text-white mt-1 group-hover:text-cyan-400 transition-colors line-clamp-1">
+                        {product.name}
+                      </h2>
+                    </Link>
                     <p className="text-xs text-neutral-400 mt-1 line-clamp-2 leading-relaxed">
                       {product.shortDescription}
                     </p>
@@ -182,22 +205,23 @@ export default function ShopPage() {
                     </div>
 
                     {/* Action */}
-                    {isAvailable ? (
-                      <button
-                        onClick={() => addToCart(product)}
-                        className="px-3.5 py-1.5 rounded-lg bg-white text-black hover:bg-neutral-200 text-xs font-semibold flex items-center gap-1.5 transition-colors"
-                      >
-                        <ShoppingBag className="w-3.5 h-3.5" />
-                        Add
-                      </button>
-                    ) : (
+                    <div className="flex items-center gap-2">
                       <Link
                         href={`/products/${product.slug}`}
-                        className="px-3 py-1.5 rounded-lg bg-[#16171d] hover:bg-[#20222a] border border-[#2b2d36] text-neutral-300 text-xs font-medium transition-colors"
+                        className="px-2.5 py-1.5 rounded-lg bg-[#14151b] hover:bg-[#1c1d24] text-neutral-300 hover:text-white text-xs font-medium border border-[#252732] transition-colors"
                       >
-                        Preview
+                        Specs
                       </Link>
-                    )}
+                      {isAvailable && (
+                        <button
+                          onClick={() => addToCart(product)}
+                          className="px-3 py-1.5 rounded-lg bg-white text-black hover:bg-neutral-200 text-xs font-semibold flex items-center gap-1.5 transition-colors"
+                        >
+                          <ShoppingBag className="w-3.5 h-3.5" />
+                          Add
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -206,5 +230,13 @@ export default function ShopPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function ShopPage() {
+  return (
+    <Suspense fallback={<div className="pt-32 text-center text-xs font-mono text-neutral-500">Loading Store Catalogue...</div>}>
+      <ShopContent />
+    </Suspense>
   );
 }

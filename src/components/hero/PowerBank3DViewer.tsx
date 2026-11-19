@@ -150,9 +150,9 @@ export default function PowerBank3DViewer({
     powerBankGroup.add(usbAPort);
 
     // LED Power Gauge (4 micro LED dots on the front face)
+    const ledGeo = new THREE.CylinderGeometry(0.035, 0.035, 0.05, 16);
+    ledGeo.rotateX(Math.PI / 2);
     for (let i = 0; i < 4; i++) {
-      const ledGeo = new THREE.CylinderGeometry(0.035, 0.035, 0.05, 16);
-      ledGeo.rotateX(Math.PI / 2);
       const ledMesh = new THREE.Mesh(ledGeo, ledGlowMaterial);
       ledMesh.position.set(-0.45 + i * 0.3, -1.4, 0.34);
       powerBankGroup.add(ledMesh);
@@ -264,6 +264,7 @@ export default function PowerBank3DViewer({
       frontPanelGeo.dispose();
       usbCPortGeo.dispose();
       usbAPortGeo.dispose();
+      ledGeo.dispose();
       darkChassisMaterial.dispose();
       sideBumperMaterial.dispose();
       portInteriorMaterial.dispose();

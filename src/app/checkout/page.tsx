@@ -38,7 +38,11 @@ const NIGERIAN_STATES = [
 ];
 
 export default function CheckoutPage() {
-  const { cart, subtotal, totalItems } = useCart();
+  const { cart, subtotal, totalItems, clearCart } = useCart();
+  const [confirmedOrderSummary, setConfirmedOrderSummary] = useState<{
+    itemsCount: number;
+    amountPaid: number;
+  }>({ itemsCount: 0, amountPaid: 0 });
 
   // Checkout flow state
   // Step 1: Google Authentication Gate (PRD §7.2)
@@ -89,11 +93,16 @@ export default function CheckoutPage() {
 
   const handleCompleteOrder = () => {
     setIsProcessingPayment(true);
+    setConfirmedOrderSummary({
+      itemsCount: totalItems,
+      amountPaid: orderTotal,
+    });
     setTimeout(() => {
       const generatedOrderId = `ORD-${Date.now().toString().slice(-8)}`;
       setOrderId(generatedOrderId);
       setIsProcessingPayment(false);
       setOrderConfirmed(true);
+      clearCart();
     }, 1500);
   };
 
@@ -153,7 +162,7 @@ export default function CheckoutPage() {
             </div>
             <div className="flex justify-between pt-1">
               <span className="text-neutral-500">Total Paid</span>
-              <span className="text-white font-bold">{formatPrice(orderTotal)}</span>
+              <span className="text-white font-bold">{formatPrice(confirmedOrderSummary.amountPaid || orderTotal)}</span>
             </div>
           </div>
 
@@ -305,8 +314,9 @@ export default function CheckoutPage() {
                 <div className="space-y-4 text-xs">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-neutral-400 font-mono mb-1.5">Full Name *</label>
+                      <label htmlFor="delivery-fullName" className="block text-neutral-400 font-mono mb-1.5">Full Name *</label>
                       <input
+                        id="delivery-fullName"
                         type="text"
                         value={deliveryData.fullName}
                         onChange={(e) => setDeliveryData({ ...deliveryData, fullName: e.target.value })}
@@ -314,8 +324,9 @@ export default function CheckoutPage() {
                       />
                     </div>
                     <div>
-                      <label className="block text-neutral-400 font-mono mb-1.5">Phone Number *</label>
+                      <label htmlFor="delivery-phone" className="block text-neutral-400 font-mono mb-1.5">Phone Number *</label>
                       <input
+                        id="delivery-phone"
                         type="tel"
                         value={deliveryData.phone}
                         onChange={(e) => setDeliveryData({ ...deliveryData, phone: e.target.value })}
@@ -327,8 +338,9 @@ export default function CheckoutPage() {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-neutral-400 font-mono mb-1.5">State *</label>
+                      <label htmlFor="delivery-state" className="block text-neutral-400 font-mono mb-1.5">State *</label>
                       <select
+                        id="delivery-state"
                         value={deliveryData.state}
                         onChange={(e) => setDeliveryData({ ...deliveryData, state: e.target.value })}
                         className="w-full bg-[#13141a] border border-[#232530] text-neutral-200 px-3.5 py-2.5 rounded-lg focus:outline-none focus:border-cyan-400"
@@ -341,8 +353,9 @@ export default function CheckoutPage() {
                       </select>
                     </div>
                     <div>
-                      <label className="block text-neutral-400 font-mono mb-1.5">City / Town *</label>
+                      <label htmlFor="delivery-city" className="block text-neutral-400 font-mono mb-1.5">City / Town *</label>
                       <input
+                        id="delivery-city"
                         type="text"
                         value={deliveryData.city}
                         onChange={(e) => setDeliveryData({ ...deliveryData, city: e.target.value })}
@@ -353,8 +366,9 @@ export default function CheckoutPage() {
                   </div>
 
                   <div>
-                    <label className="block text-neutral-400 font-mono mb-1.5">Street Address *</label>
+                    <label htmlFor="delivery-address" className="block text-neutral-400 font-mono mb-1.5">Street Address *</label>
                     <input
+                      id="delivery-address"
                       type="text"
                       value={deliveryData.address}
                       onChange={(e) => setDeliveryData({ ...deliveryData, address: e.target.value })}

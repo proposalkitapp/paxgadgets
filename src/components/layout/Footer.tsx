@@ -90,11 +90,13 @@ export default function Footer() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email"
+                  aria-label="Email address for release broadcasts"
                   required
                   className="flex-1 bg-[#101115] border border-[#20222a] text-xs text-neutral-200 px-3.5 py-2.5 rounded-l-lg focus:outline-none focus:border-cyan-400"
                 />
                 <button
                   type="submit"
+                  aria-label="Subscribe to release broadcasts"
                   className="px-4 py-2.5 bg-white text-black hover:bg-neutral-200 rounded-r-lg text-xs font-semibold flex items-center justify-center transition-colors"
                 >
                   {subscribed ? <Check className="w-4 h-4 text-emerald-600" /> : <ArrowRight className="w-4 h-4" />}

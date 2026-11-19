@@ -34,7 +34,7 @@ export default function CategoryShowcase() {
           {categories.map((category) => (
             <Link
               key={category.id}
-              href={`/categories/${category.slug}`}
+              href={`/shop?category=${category.slug}`}
               className="group p-6 rounded-2xl bg-[#0d0e12] border border-[#1e2026] hover:border-[#2f323c] transition-all duration-300 flex flex-col justify-between hover:translate-y-[-2px] relative overflow-hidden"
             >
               {/* Category Header */}
