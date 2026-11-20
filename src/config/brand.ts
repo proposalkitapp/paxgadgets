@@ -27,7 +27,6 @@ export interface BrandConfig {
     twitter?: string;
     instagram?: string;
     linkedin?: string;
-    facebook?: string;
   };
   hero: {
     headline: string;
@@ -40,9 +39,9 @@ export interface BrandConfig {
 }
 
 export const brandConfig: BrandConfig = {
-  name: "BRAND",
+  name: "Brand",
   wordmark: "BRAND",
-  tagline: "High-Performance Consumer Technology",
+  tagline: "Industrial Design & High-Density Power",
   market: "Nigeria",
   currency: {
     code: "NGN",
@@ -67,24 +66,23 @@ export const brandConfig: BrandConfig = {
       ],
       support: [
         { label: "Contact Us", href: "/contact" },
-        { label: "FAQs", href: "/faqs" },
-        { label: "Track Order", href: "/account/orders" },
-        { label: "Shipping Policy", href: "/policies/shipping" },
-        { label: "Returns & Warranty", href: "/policies/returns" },
+        { label: "FAQs", href: "/contact#faqs" },
+        { label: "Track Order", href: "/account" },
+        { label: "Shipping Policy", href: "/about" },
+        { label: "Returns & Warranty", href: "/about" },
       ],
       company: [
-        { label: "About Us", href: "/about" },
-        { label: "Brand Philosophy", href: "/about#philosophy" },
-        { label: "Careers", href: "/about#careers" },
+        { label: "About Brand", href: "/about" },
+        { label: "Design Philosophy", href: "/about" },
       ],
       legal: [
-        { label: "Privacy Policy", href: "/policies/privacy" },
-        { label: "Terms & Conditions", href: "/policies/terms" },
+        { label: "Privacy Policy", href: "/about" },
+        { label: "Terms of Service", href: "/about" },
       ],
     },
   },
   contact: {
-    email: "support@brandtech.ng",
+    email: "concierge@brandtech.ng",
     phone: "+234 (0) 800 000 0000",
     whatsapp: "+234 800 000 0000",
     address: "Victoria Island, Lagos, Nigeria",
@@ -95,11 +93,11 @@ export const brandConfig: BrandConfig = {
     linkedin: "https://linkedin.com",
   },
   hero: {
-    headline: "Power your world.",
-    subheadline: "Technology engineered to keep you connected, powered and moving.",
+    headline: "Engineered Power. Pure Form.",
+    subheadline: "A precision high-density power cell enveloped in tactile carbon matte with dual bi-directional fast charging.",
     primaryCta: "Explore Power Bank",
     primaryCtaHref: "/products/charcoal-fast-charge-power-bank",
-    secondaryCta: "Discover Products",
+    secondaryCta: "View Catalogue",
     secondaryCtaHref: "/shop",
   },
 };

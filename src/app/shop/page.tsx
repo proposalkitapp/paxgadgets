@@ -55,7 +55,7 @@ function ShopContent() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Page Header */}
         <div className="mb-10">
-          <span className="text-xs font-mono uppercase tracking-widest text-cyan-400">
+          <span className="text-xs font-mono uppercase tracking-widest text-emerald-400">
             Official Storefront
           </span>
           <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-white mt-1">
@@ -78,7 +78,7 @@ function ShopContent() {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search products..."
                 aria-label="Search catalogue products"
-                className="w-full bg-[#15161c] border border-[#252730] text-xs text-neutral-200 pl-9 pr-3.5 py-2.5 rounded-lg focus:outline-none focus:border-cyan-400"
+                className="w-full bg-[#15161c] border border-[#252730] text-xs text-neutral-200 pl-9 pr-3.5 py-2.5 rounded-lg focus:outline-none focus:border-emerald-400"
               />
             </div>
 
@@ -182,7 +182,7 @@ function ShopContent() {
                       {product.category}
                     </span>
                     <Link href={`/products/${product.slug}`} className="block">
-                      <h2 className="text-sm font-bold text-white mt-1 group-hover:text-cyan-400 transition-colors line-clamp-1">
+                      <h2 className="text-sm font-bold text-white mt-1 group-hover:text-emerald-400 transition-colors line-clamp-1">
                         {product.name}
                       </h2>
                     </Link>

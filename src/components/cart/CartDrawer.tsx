@@ -42,9 +42,9 @@ export default function CartDrawer() {
           {/* Header */}
           <div className="px-6 py-5 border-b border-[#1c1d22] flex items-center justify-between">
             <div className="flex items-center gap-2.5">
-              <ShoppingBag className="w-5 h-5 text-cyan-400" />
+              <ShoppingBag className="w-5 h-5 text-emerald-400" />
               <h2 className="text-base font-semibold tracking-wide">Shopping Bag</h2>
-              <span className="text-xs font-mono bg-[#1a1c22] text-neutral-400 px-2 py-0.5 rounded-full border border-[#2b2d35]">
+              <span className="text-xs font-mono bg-[#14151a] text-emerald-400 px-2 py-0.5 rounded-full border border-emerald-900/50">
                 {totalItems}
               </span>
             </div>
@@ -97,7 +97,7 @@ export default function CartDrawer() {
                     <h4 className="text-xs font-medium text-neutral-200 truncate">
                       {item.product.name}
                     </h4>
-                    <p className="text-xs font-mono font-semibold text-cyan-400 mt-0.5">
+                    <p className="text-xs font-mono font-semibold text-emerald-400 mt-0.5">
                       {formatPrice(item.product.price)}
                     </p>
 
@@ -151,7 +151,7 @@ export default function CartDrawer() {
                 </div>
                 <div className="pt-2 border-t border-[#1f2026] flex justify-between text-sm font-semibold text-neutral-100">
                   <span>Order Total</span>
-                  <span className="font-mono text-cyan-400">{formatPrice(subtotal)}</span>
+                  <span className="font-mono text-emerald-400">{formatPrice(subtotal)}</span>
                 </div>
               </div>
 

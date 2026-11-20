@@ -1,16 +1,16 @@
 @import "tailwindcss";
 
 :root {
-  --background: #090a0c;
-  --foreground: #ededed;
-  --surface-panel: #121316;
-  --surface-elevated: #18191e;
-  --surface-highlight: #22242a;
-  --border-muted: #23252b;
-  --border-subtle: #1c1d22;
-  --accent-cyan: #00e5ff;
-  --accent-blue: #3b82f6;
-  --accent-amber: #f59e0b;
+  --background: #08090a;
+  --foreground: #f3f3f4;
+  --surface-panel: #0e0f12;
+  --surface-elevated: #141518;
+  --surface-highlight: #1a1b20;
+  --border-muted: #1c1d22;
+  --border-subtle: #16171b;
+  --accent-emerald: #00e676;
+  --accent-mint: #10b981;
+  --accent-glow: rgba(0, 230, 118, 0.25);
 }
 
 @theme inline {
@@ -21,9 +21,8 @@
   --color-surface-highlight: var(--surface-highlight);
   --color-border-muted: var(--border-muted);
   --color-border-subtle: var(--border-subtle);
-  --color-accent-cyan: var(--accent-cyan);
-  --color-accent-blue: var(--accent-blue);
-  --color-accent-amber: var(--accent-amber);
+  --color-accent-emerald: var(--accent-emerald);
+  --color-accent-mint: var(--accent-mint);
 }
 
 body {
@@ -36,35 +35,49 @@ body {
 
 /* Custom subtle scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #090a0c;
+  background: #08090a;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #23252b;
+  background: #1c1d22;
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #353742;
+  background: #2a2b33;
 }
 
-/* Metallic and glow utility classes */
-.glass-panel {
-  background: rgba(18, 19, 22, 0.75);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.07);
+/* Studio lighting radial gradient */
+.studio-radial-bg {
+  background: radial-gradient(circle at 50% 45%, #18191e 0%, #0c0d10 55%, #060708 100%);
+}
+
+.studio-card-bg {
+  background: radial-gradient(circle at 50% 20%, #15161b 0%, #0d0e11 100%);
+}
+
+/* Satin glass panel */
+.satin-panel {
+  background: rgba(14, 15, 18, 0.72);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .subtle-border {
-  border: 1px solid #23252b;
+  border: 1px solid #1c1d22;
 }
 
 .subtle-border-hover:hover {
-  border-color: #3b3e47;
+  border-color: #2c2d36;
+}
+
+/* Floating shadow effect */
+.product-contact-shadow {
+  box-shadow: 0 45px 75px -15px rgba(0, 0, 0, 0.95), 0 0 35px -5px rgba(0, 230, 118, 0.08);
 }

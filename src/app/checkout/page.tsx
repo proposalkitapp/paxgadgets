@@ -150,7 +150,7 @@ export default function CheckoutPage() {
           <div className="p-6 rounded-2xl bg-[#0e0f14] border border-[#1f2128] text-left space-y-3 font-mono text-xs">
             <div className="flex justify-between border-b border-[#1c1d22] pb-2">
               <span className="text-neutral-500">Order Reference</span>
-              <span className="text-cyan-400 font-bold">{orderId}</span>
+              <span className="text-emerald-400 font-bold">{orderId}</span>
             </div>
             <div className="flex justify-between border-b border-[#1c1d22] pb-2">
               <span className="text-neutral-500">Customer</span>
@@ -215,7 +215,7 @@ export default function CheckoutPage() {
                     className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-mono font-bold ${
                       isAuthenticated
                         ? "bg-emerald-950 text-emerald-400 border border-emerald-800"
-                        : "bg-cyan-950 text-cyan-400 border border-cyan-800"
+                        : "bg-emerald-950/80 text-emerald-400 border border-emerald-800/60"
                     }`}
                   >
                     {isAuthenticated ? <Check className="w-3.5 h-3.5" /> : "1"}
@@ -228,7 +228,7 @@ export default function CheckoutPage() {
                 {isAuthenticated && (
                   <button
                     onClick={() => setIsAuthenticated(false)}
-                    className="text-[11px] font-mono text-neutral-500 hover:text-cyan-400"
+                    className="text-[11px] font-mono text-neutral-500 hover:text-emerald-400"
                   >
                     Switch Account
                   </button>
@@ -400,7 +400,7 @@ export default function CheckoutPage() {
                   </div>
                   <button
                     onClick={() => setDeliveryConfirmed(false)}
-                    className="text-xs text-cyan-400 hover:underline"
+                    className="text-xs text-emerald-400 hover:underline"
                   >
                     Edit
                   </button>
@@ -415,7 +415,7 @@ export default function CheckoutPage() {
               }`}
             >
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-7 h-7 rounded-full bg-cyan-950 text-cyan-400 border border-cyan-800 flex items-center justify-center text-xs font-mono font-bold">
+                <div className="w-7 h-7 rounded-full bg-emerald-950 text-emerald-400 border border-emerald-800 flex items-center justify-center text-xs font-mono font-bold">
                   3
                 </div>
                 <h2 className="text-base font-bold text-white">Payment Method (Nigeria)</h2>
@@ -427,11 +427,11 @@ export default function CheckoutPage() {
                     onClick={() => setPaymentMethod("card")}
                     className={`p-4 rounded-xl border text-center transition-all ${
                       paymentMethod === "card"
-                        ? "bg-cyan-950/40 border-cyan-500 text-white"
+                        ? "bg-emerald-950/40 border-emerald-500 text-white"
                         : "bg-[#121318] border-[#22242c] text-neutral-400"
                     }`}
                   >
-                    <CreditCard className="w-5 h-5 mx-auto mb-2 text-cyan-400" />
+                    <CreditCard className="w-5 h-5 mx-auto mb-2 text-emerald-400" />
                     <span className="text-xs font-semibold block">Debit Card</span>
                     <span className="text-[10px] text-neutral-500 font-mono">Mastercard/Visa/Verve</span>
                   </button>
@@ -440,11 +440,11 @@ export default function CheckoutPage() {
                     onClick={() => setPaymentMethod("transfer")}
                     className={`p-4 rounded-xl border text-center transition-all ${
                       paymentMethod === "transfer"
-                        ? "bg-cyan-950/40 border-cyan-500 text-white"
+                        ? "bg-emerald-950/40 border-emerald-500 text-white"
                         : "bg-[#121318] border-[#22242c] text-neutral-400"
                     }`}
                   >
-                    <Building className="w-5 h-5 mx-auto mb-2 text-cyan-400" />
+                    <Building className="w-5 h-5 mx-auto mb-2 text-emerald-400" />
                     <span className="text-xs font-semibold block">Bank Transfer</span>
                     <span className="text-[10px] text-neutral-500 font-mono">Instant Virtual Account</span>
                   </button>
@@ -453,11 +453,11 @@ export default function CheckoutPage() {
                     onClick={() => setPaymentMethod("ussd")}
                     className={`p-4 rounded-xl border text-center transition-all ${
                       paymentMethod === "ussd"
-                        ? "bg-cyan-950/40 border-cyan-500 text-white"
+                        ? "bg-emerald-950/40 border-emerald-500 text-white"
                         : "bg-[#121318] border-[#22242c] text-neutral-400"
                     }`}
                   >
-                    <Smartphone className="w-5 h-5 mx-auto mb-2 text-cyan-400" />
+                    <Smartphone className="w-5 h-5 mx-auto mb-2 text-emerald-400" />
                     <span className="text-xs font-semibold block">USSD Banking</span>
                     <span className="text-[10px] text-neutral-500 font-mono">*Bank Code#</span>
                   </button>
@@ -531,13 +531,13 @@ export default function CheckoutPage() {
                 </div>
                 <div className="border-t border-[#1f2026] pt-3 flex justify-between text-sm font-bold text-white">
                   <span>Total Amount</span>
-                  <span className="font-mono text-cyan-400">{formatPrice(orderTotal)}</span>
+                  <span className="font-mono text-emerald-400">{formatPrice(orderTotal)}</span>
                 </div>
               </div>
 
               <div className="p-3 rounded-lg bg-[#121318] border border-[#1e2026] text-[11px] text-neutral-400 space-y-1">
                 <div className="flex items-center gap-1.5 text-neutral-300 font-semibold">
-                  <Truck className="w-3.5 h-3.5 text-cyan-400" />
+                  <Truck className="w-3.5 h-3.5 text-emerald-400" />
                   Fast Track Fulfillment
                 </div>
                 <p>Orders dispatched within 24 hours from our Lagos distribution hub.</p>

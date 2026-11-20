@@ -90,7 +90,7 @@ export default function ProductDetailView({ slug }: { slug: string }) {
                     onClick={() => setSelectedImage(img)}
                     className={`relative w-20 h-20 rounded-xl bg-[#0e0f14] border flex-shrink-0 p-2 overflow-hidden transition-all ${
                       selectedImage === img
-                        ? "border-cyan-400 ring-2 ring-cyan-400/20"
+                        ? "border-emerald-400 ring-2 ring-emerald-400/20"
                         : "border-[#20222a] opacity-70 hover:opacity-100"
                     }`}
                   >
@@ -110,7 +110,7 @@ export default function ProductDetailView({ slug }: { slug: string }) {
           {/* Details & Purchasing Actions Column */}
           <div className="lg:col-span-5 space-y-6">
             <div>
-              <span className="text-xs font-mono uppercase tracking-widest text-cyan-400">
+              <span className="text-xs font-mono uppercase tracking-widest text-emerald-400">
                 {product.category}
               </span>
               <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white mt-1">
@@ -254,7 +254,7 @@ export default function ProductDetailView({ slug }: { slug: string }) {
                   key={idx}
                   className="p-4 rounded-xl bg-[#0c0d10] border border-[#1e2026] flex items-start gap-3"
                 >
-                  <Sparkles className="w-4 h-4 text-cyan-400 flex-shrink-0 mt-0.5" />
+                  <Sparkles className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
                   <p className="text-xs text-neutral-300 leading-relaxed">{feature}</p>
                 </div>
               ))}
@@ -288,10 +288,10 @@ export default function ProductDetailView({ slug }: { slug: string }) {
                     <span className="text-[10px] font-mono text-neutral-500 uppercase">
                       {rel.category}
                     </span>
-                    <h4 className="text-sm font-bold text-white mt-1 group-hover:text-cyan-400 transition-colors">
+                    <h4 className="text-sm font-bold text-white mt-1 group-hover:text-emerald-400 transition-colors">
                       {rel.name}
                     </h4>
-                    <span className="inline-block mt-3 text-xs font-mono text-cyan-400">
+                    <span className="inline-block mt-3 text-xs font-mono text-emerald-400">
                       {rel.availabilityStatus === "Available" ? formatPrice(rel.price) : "Coming Soon"}
                     </span>
                   </div>
