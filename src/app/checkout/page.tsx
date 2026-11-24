@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -17,7 +17,8 @@ import {
 } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { formatPrice } from "@/lib/utils";
-import { brandConfig } from "@/config/brand";
+import { trackCheckoutStart } from "@/lib/analytics";
+import { createOrder } from "@/lib/adminStore";
 
 const NIGERIAN_STATES = [
   "Lagos",
@@ -43,6 +44,25 @@ export default function CheckoutPage() {
     itemsCount: number;
     amountPaid: number;
   }>({ itemsCount: 0, amountPaid: 0 });
+
+  const hasTrackedCheckoutStart = useRef(false);
+
+  useEffect(() => {
+    if (cart.length > 0 && !hasTrackedCheckoutStart.current) {
+      hasTrackedCheckoutStart.current = true;
+      trackCheckoutStart({
+        cartCount: totalItems,
+        subtotal,
+        items: cart.map((i) => ({
+          id: i.product.id,
+          name: i.product.name,
+          price: i.product.price,
+          quantity: i.quantity,
+          category: i.product.category,
+        })),
+      });
+    }
+  }, [cart, totalItems, subtotal]);
 
   // Checkout flow state
   // Step 1: Google Authentication Gate (PRD §7.2)
@@ -100,6 +120,35 @@ export default function CheckoutPage() {
     setTimeout(() => {
       const generatedOrderId = `ORD-${Date.now().toString().slice(-8)}`;
       setOrderId(generatedOrderId);
+
+      // Save order into the central administrative order repository (PRD §4.1 -> §4.2)
+      createOrder({
+        id: generatedOrderId,
+        customer: {
+          fullName: deliveryData.fullName,
+          email: deliveryData.email,
+          phone: deliveryData.phone,
+          state: deliveryData.state,
+          city: deliveryData.city,
+          address: deliveryData.address,
+          instructions: deliveryData.instructions || undefined,
+        },
+        items: cart.map((item) => ({
+          id: item.product.id,
+          name: item.product.name,
+          price: item.product.price,
+          quantity: item.quantity,
+          category: item.product.category,
+          heroImage: item.product.heroImage,
+        })),
+        subtotal,
+        deliveryFee,
+        totalAmount: orderTotal,
+        paymentMethod,
+        paymentStatus: "Paid",
+        notes: `Storefront order placed via ${paymentMethod.toUpperCase()}`,
+      });
+
       setIsProcessingPayment(false);
       setOrderConfirmed(true);
       clearCart();
@@ -212,11 +261,10 @@ export default function CheckoutPage() {
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
                   <div
-                    className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-mono font-bold ${
-                      isAuthenticated
-                        ? "bg-emerald-950 text-emerald-400 border border-emerald-800"
-                        : "bg-emerald-950/80 text-emerald-400 border border-emerald-800/60"
-                    }`}
+                    className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-mono font-bold ${isAuthenticated
+                      ? "bg-emerald-950 text-emerald-400 border border-emerald-800"
+                      : "bg-emerald-950/80 text-emerald-400 border border-emerald-800/60"
+                      }`}
                   >
                     {isAuthenticated ? <Check className="w-3.5 h-3.5" /> : "1"}
                   </div>
@@ -293,17 +341,15 @@ export default function CheckoutPage() {
 
             {/* Step 2: Delivery Information */}
             <div
-              className={`p-6 sm:p-8 rounded-2xl bg-[#0e0f14] border transition-opacity ${
-                isAuthenticated ? "border-[#1f2128]" : "border-[#16171d] opacity-50 pointer-events-none"
-              }`}
+              className={`p-6 sm:p-8 rounded-2xl bg-[#0e0f14] border transition-opacity ${isAuthenticated ? "border-[#1f2128]" : "border-[#16171d] opacity-50 pointer-events-none"
+                }`}
             >
               <div className="flex items-center gap-3 mb-6">
                 <div
-                  className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-mono font-bold ${
-                    deliveryConfirmed
-                      ? "bg-emerald-950 text-emerald-400 border border-emerald-800"
-                      : "bg-cyan-950 text-cyan-400 border border-cyan-800"
-                  }`}
+                  className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-mono font-bold ${deliveryConfirmed
+                    ? "bg-emerald-950 text-emerald-400 border border-emerald-800"
+                    : "bg-cyan-950 text-cyan-400 border border-cyan-800"
+                    }`}
                 >
                   {deliveryConfirmed ? <Check className="w-3.5 h-3.5" /> : "2"}
                 </div>
@@ -320,7 +366,7 @@ export default function CheckoutPage() {
                         type="text"
                         value={deliveryData.fullName}
                         onChange={(e) => setDeliveryData({ ...deliveryData, fullName: e.target.value })}
-                        className="w-full bg-[#13141a] border border-[#232530] text-neutral-200 px-3.5 py-2.5 rounded-lg focus:outline-none focus:border-cyan-400"
+                        className="w-full bg-[#13141a] border border-[#232530] text-neutral-200 px-3.5 py-3 sm:py-2.5 text-base sm:text-xs rounded-xl focus:outline-none focus:border-cyan-400"
                       />
                     </div>
                     <div>
@@ -331,7 +377,7 @@ export default function CheckoutPage() {
                         value={deliveryData.phone}
                         onChange={(e) => setDeliveryData({ ...deliveryData, phone: e.target.value })}
                         placeholder="+234 800 000 0000"
-                        className="w-full bg-[#13141a] border border-[#232530] text-neutral-200 px-3.5 py-2.5 rounded-lg focus:outline-none focus:border-cyan-400"
+                        className="w-full bg-[#13141a] border border-[#232530] text-neutral-200 px-3.5 py-3 sm:py-2.5 text-base sm:text-xs rounded-xl focus:outline-none focus:border-cyan-400"
                       />
                     </div>
                   </div>
@@ -343,7 +389,7 @@ export default function CheckoutPage() {
                         id="delivery-state"
                         value={deliveryData.state}
                         onChange={(e) => setDeliveryData({ ...deliveryData, state: e.target.value })}
-                        className="w-full bg-[#13141a] border border-[#232530] text-neutral-200 px-3.5 py-2.5 rounded-lg focus:outline-none focus:border-cyan-400"
+                        className="w-full bg-[#13141a] border border-[#232530] text-neutral-200 px-3.5 py-3 sm:py-2.5 text-base sm:text-xs rounded-xl focus:outline-none focus:border-cyan-400"
                       >
                         {NIGERIAN_STATES.map((st) => (
                           <option key={st} value={st}>
@@ -360,7 +406,7 @@ export default function CheckoutPage() {
                         value={deliveryData.city}
                         onChange={(e) => setDeliveryData({ ...deliveryData, city: e.target.value })}
                         placeholder="e.g. Ikeja, Lekki, Victoria Island"
-                        className="w-full bg-[#13141a] border border-[#232530] text-neutral-200 px-3.5 py-2.5 rounded-lg focus:outline-none focus:border-cyan-400"
+                        className="w-full bg-[#13141a] border border-[#232530] text-neutral-200 px-3.5 py-3 sm:py-2.5 text-base sm:text-xs rounded-xl focus:outline-none focus:border-cyan-400"
                       />
                     </div>
                   </div>
@@ -373,7 +419,7 @@ export default function CheckoutPage() {
                       value={deliveryData.address}
                       onChange={(e) => setDeliveryData({ ...deliveryData, address: e.target.value })}
                       placeholder="Street name, building number, landmark"
-                      className="w-full bg-[#13141a] border border-[#232530] text-neutral-200 px-3.5 py-2.5 rounded-lg focus:outline-none focus:border-cyan-400"
+                      className="w-full bg-[#13141a] border border-[#232530] text-neutral-200 px-3.5 py-3 sm:py-2.5 text-base sm:text-xs rounded-xl focus:outline-none focus:border-cyan-400"
                     />
                   </div>
 
@@ -384,7 +430,7 @@ export default function CheckoutPage() {
                       }
                     }}
                     disabled={!deliveryData.fullName || !deliveryData.phone || !deliveryData.address}
-                    className="w-full py-3 rounded-xl bg-white text-black hover:bg-neutral-200 font-semibold text-xs tracking-wider uppercase transition-colors disabled:opacity-40"
+                    className="w-full py-3.5 rounded-xl bg-white text-black hover:bg-neutral-200 font-semibold text-xs tracking-wider uppercase transition-colors disabled:opacity-40 min-h-[48px]"
                   >
                     Confirm Delivery Address
                   </button>
@@ -410,9 +456,8 @@ export default function CheckoutPage() {
 
             {/* Step 3: Payment Gateway Trigger */}
             <div
-              className={`p-6 sm:p-8 rounded-2xl bg-[#0e0f14] border transition-opacity ${
-                deliveryConfirmed ? "border-[#1f2128]" : "border-[#16171d] opacity-50 pointer-events-none"
-              }`}
+              className={`p-6 sm:p-8 rounded-2xl bg-[#0e0f14] border transition-opacity ${deliveryConfirmed ? "border-[#1f2128]" : "border-[#16171d] opacity-50 pointer-events-none"
+                }`}
             >
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-7 h-7 rounded-full bg-emerald-950 text-emerald-400 border border-emerald-800 flex items-center justify-center text-xs font-mono font-bold">
@@ -422,44 +467,47 @@ export default function CheckoutPage() {
               </div>
 
               <div className="space-y-4">
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3">
                   <button
                     onClick={() => setPaymentMethod("card")}
-                    className={`p-4 rounded-xl border text-center transition-all ${
-                      paymentMethod === "card"
-                        ? "bg-emerald-950/40 border-emerald-500 text-white"
-                        : "bg-[#121318] border-[#22242c] text-neutral-400"
-                    }`}
+                    className={`p-3.5 sm:p-4 rounded-xl border flex sm:flex-col items-center gap-3 sm:gap-0 sm:text-center transition-all ${paymentMethod === "card"
+                      ? "bg-emerald-950/40 border-emerald-500 text-white"
+                      : "bg-[#121318] border-[#22242c] text-neutral-400"
+                      }`}
                   >
-                    <CreditCard className="w-5 h-5 mx-auto mb-2 text-emerald-400" />
-                    <span className="text-xs font-semibold block">Debit Card</span>
-                    <span className="text-[10px] text-neutral-500 font-mono">Mastercard/Visa/Verve</span>
+                    <CreditCard className="w-5 h-5 sm:mx-auto sm:mb-2 text-emerald-400 flex-shrink-0" />
+                    <div className="text-left sm:text-center">
+                      <span className="text-xs font-semibold block">Debit Card</span>
+                      <span className="text-[10px] text-neutral-500 font-mono">Mastercard/Visa/Verve</span>
+                    </div>
                   </button>
 
                   <button
                     onClick={() => setPaymentMethod("transfer")}
-                    className={`p-4 rounded-xl border text-center transition-all ${
-                      paymentMethod === "transfer"
-                        ? "bg-emerald-950/40 border-emerald-500 text-white"
-                        : "bg-[#121318] border-[#22242c] text-neutral-400"
-                    }`}
+                    className={`p-3.5 sm:p-4 rounded-xl border flex sm:flex-col items-center gap-3 sm:gap-0 sm:text-center transition-all ${paymentMethod === "transfer"
+                      ? "bg-emerald-950/40 border-emerald-500 text-white"
+                      : "bg-[#121318] border-[#22242c] text-neutral-400"
+                      }`}
                   >
-                    <Building className="w-5 h-5 mx-auto mb-2 text-emerald-400" />
-                    <span className="text-xs font-semibold block">Bank Transfer</span>
-                    <span className="text-[10px] text-neutral-500 font-mono">Instant Virtual Account</span>
+                    <Building className="w-5 h-5 sm:mx-auto sm:mb-2 text-emerald-400 flex-shrink-0" />
+                    <div className="text-left sm:text-center">
+                      <span className="text-xs font-semibold block">Bank Transfer</span>
+                      <span className="text-[10px] text-neutral-500 font-mono">Instant Virtual Account</span>
+                    </div>
                   </button>
 
                   <button
                     onClick={() => setPaymentMethod("ussd")}
-                    className={`p-4 rounded-xl border text-center transition-all ${
-                      paymentMethod === "ussd"
-                        ? "bg-emerald-950/40 border-emerald-500 text-white"
-                        : "bg-[#121318] border-[#22242c] text-neutral-400"
-                    }`}
+                    className={`p-3.5 sm:p-4 rounded-xl border flex sm:flex-col items-center gap-3 sm:gap-0 sm:text-center transition-all ${paymentMethod === "ussd"
+                      ? "bg-emerald-950/40 border-emerald-500 text-white"
+                      : "bg-[#121318] border-[#22242c] text-neutral-400"
+                      }`}
                   >
-                    <Smartphone className="w-5 h-5 mx-auto mb-2 text-emerald-400" />
-                    <span className="text-xs font-semibold block">USSD Banking</span>
-                    <span className="text-[10px] text-neutral-500 font-mono">*Bank Code#</span>
+                    <Smartphone className="w-5 h-5 sm:mx-auto sm:mb-2 text-emerald-400 flex-shrink-0" />
+                    <div className="text-left sm:text-center">
+                      <span className="text-xs font-semibold block">USSD Banking</span>
+                      <span className="text-[10px] text-neutral-500 font-mono">*Bank Code#</span>
+                    </div>
                   </button>
                 </div>
 

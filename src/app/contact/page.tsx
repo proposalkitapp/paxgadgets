@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Mail, Phone, MessageSquare, Check, Send, HelpCircle, ShieldAlert } from "lucide-react";
+import { Mail, Phone, MessageSquare, Check, Send, HelpCircle } from "lucide-react";
 import { brandConfig } from "@/config/brand";
 
 export default function ContactPage() {
@@ -13,12 +13,15 @@ export default function ContactPage() {
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [referenceId, setReferenceId] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    const ref = Date.now().toString().slice(-6);
     setTimeout(() => {
       setIsSubmitting(false);
+      setReferenceId(ref);
       setIsSubmitted(true);
       setFormData({ name: "", email: "", subject: "", message: "" });
     }, 800);
@@ -134,7 +137,7 @@ export default function ContactPage() {
                   </div>
                   <h3 className="text-sm font-bold text-white">Message Dispatched Successfully</h3>
                   <p className="text-xs text-neutral-400">
-                    Thank you for reaching out. A confirmation has been logged with reference ID #INQ-{Date.now().toString().slice(-6)}.
+                    Thank you for reaching out. A confirmation has been logged with reference ID #INQ-{referenceId || "000000"}.
                   </p>
                   <button
                     onClick={() => setIsSubmitted(false)}

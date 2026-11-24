@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -17,6 +17,7 @@ import {
 import { products } from "@/data/products";
 import { formatPrice } from "@/lib/utils";
 import { useCart } from "@/context/CartContext";
+import { trackProductView } from "@/lib/analytics";
 
 export default function ProductDetailView({ slug }: { slug: string }) {
   const { addToCart } = useCart();
@@ -30,8 +31,21 @@ export default function ProductDetailView({ slug }: { slug: string }) {
   const [quantity, setQuantity] = useState<number>(1);
   const [addedAnimation, setAddedAnimation] = useState<boolean>(false);
 
+  // Track product view in analytics
+  useEffect(() => {
+    trackProductView({
+      productId: product.id,
+      productName: product.name,
+      category: product.category,
+      price: product.price,
+      slug: product.slug,
+    });
+  }, [product]);
+
   const isAvailable = product.availabilityStatus === "Available";
-  const relatedProducts = products.filter((p) => p.id !== product.id).slice(0, 3);
+  const categoryRelated = products.filter((p) => p.id !== product.id && p.categorySlug === product.categorySlug);
+  const otherRelated = products.filter((p) => p.id !== product.id && p.categorySlug !== product.categorySlug);
+  const relatedProducts = [...categoryRelated, ...otherRelated].slice(0, 3);
 
   const handleAddToCart = () => {
     if (!isAvailable) return;
@@ -41,10 +55,10 @@ export default function ProductDetailView({ slug }: { slug: string }) {
   };
 
   return (
-    <div className="pt-28 pb-20 bg-[#090a0d] min-h-screen">
+    <div className="pt-24 sm:pt-28 pb-32 lg:pb-20 bg-[#090a0d] min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
-        <nav className="flex items-center gap-2 text-xs text-neutral-500 mb-8 font-mono">
+        <nav className="flex items-center gap-2 text-xs text-neutral-500 mb-6 sm:mb-8 font-mono overflow-x-auto whitespace-nowrap">
           <Link href="/" className="hover:text-white">Home</Link>
           <span>/</span>
           <Link href="/shop" className="hover:text-white">Catalogue</Link>
@@ -70,11 +84,10 @@ export default function ProductDetailView({ slug }: { slug: string }) {
               {/* Status Badge */}
               <div className="absolute top-4 left-4">
                 <span
-                  className={`px-3 py-1 rounded-md text-xs font-mono font-bold uppercase tracking-wider ${
-                    isAvailable
+                  className={`px-3 py-1 rounded-md text-xs font-mono font-bold uppercase tracking-wider ${isAvailable
                       ? "bg-emerald-950/80 text-emerald-400 border border-emerald-800/50"
                       : "bg-amber-950/80 text-amber-400 border border-amber-800/50"
-                  }`}
+                    }`}
                 >
                   {product.availabilityStatus}
                 </span>
@@ -88,11 +101,10 @@ export default function ProductDetailView({ slug }: { slug: string }) {
                   <button
                     key={idx}
                     onClick={() => setSelectedImage(img)}
-                    className={`relative w-20 h-20 rounded-xl bg-[#0e0f14] border flex-shrink-0 p-2 overflow-hidden transition-all ${
-                      selectedImage === img
+                    className={`relative w-20 h-20 rounded-xl bg-[#0e0f14] border flex-shrink-0 p-2 overflow-hidden transition-all ${selectedImage === img
                         ? "border-emerald-400 ring-2 ring-emerald-400/20"
                         : "border-[#20222a] opacity-70 hover:opacity-100"
-                    }`}
+                      }`}
                   >
                     <Image
                       src={img}
@@ -158,20 +170,20 @@ export default function ProductDetailView({ slug }: { slug: string }) {
               <div className="space-y-3 pt-2">
                 <div className="flex items-center gap-4">
                   <div className="text-xs text-neutral-400 font-medium">Quantity</div>
-                  <div className="flex items-center rounded-lg border border-[#23252d] bg-[#121317]">
+                  <div className="flex items-center rounded-xl border border-[#23252d] bg-[#121317]">
                     <button
                       onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                      className="p-2 text-neutral-400 hover:text-white transition-colors"
+                      className="w-11 h-11 flex items-center justify-center text-neutral-400 hover:text-white transition-colors"
                       aria-label="Decrease quantity"
                     >
                       <Minus className="w-4 h-4" />
                     </button>
-                    <span className="px-4 text-xs font-mono font-semibold text-white">
+                    <span className="px-4 text-sm font-mono font-bold text-white">
                       {quantity}
                     </span>
                     <button
                       onClick={() => setQuantity((q) => Math.min(product.stockQuantity, q + 1))}
-                      className="p-2 text-neutral-400 hover:text-white transition-colors"
+                      className="w-11 h-11 flex items-center justify-center text-neutral-400 hover:text-white transition-colors"
                       aria-label="Increase quantity"
                     >
                       <Plus className="w-4 h-4" />
@@ -181,11 +193,10 @@ export default function ProductDetailView({ slug }: { slug: string }) {
 
                 <button
                   onClick={handleAddToCart}
-                  className={`w-full py-4 px-6 rounded-xl font-bold text-xs tracking-wider uppercase flex items-center justify-center gap-2 transition-all shadow-xl ${
-                    addedAnimation
-                      ? "bg-emerald-500 text-black"
-                      : "bg-white text-black hover:bg-neutral-200 shadow-white/5"
-                  }`}
+                  className={`w-full py-4 px-6 rounded-xl font-bold text-xs tracking-wider uppercase flex items-center justify-center gap-2 transition-all shadow-xl min-h-[48px] ${addedAnimation
+                      ? "bg-emerald-500 text-black font-bold"
+                      : "bg-white text-black active:bg-neutral-200 shadow-white/5"
+                    }`}
                 >
                   <ShoppingBag className="w-4 h-4" />
                   {addedAnimation ? "Added to Shopping Bag!" : "Add to Bag"}
@@ -301,6 +312,44 @@ export default function ProductDetailView({ slug }: { slug: string }) {
           </div>
         )}
       </div>
+
+      {/* Floating Mobile Sticky Action Bar */}
+      {isAvailable && (
+        <div className="fixed bottom-0 left-0 right-0 z-30 p-3 sm:p-4 bg-[#090a0d]/95 backdrop-blur-xl border-t border-[#1f2129] lg:hidden flex items-center justify-between gap-3 shadow-[0_-10px_25px_rgba(0,0,0,0.8)]">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="relative w-11 h-11 rounded-lg bg-[#0e0f14] border border-[#20222a] flex-shrink-0 p-1">
+              <Image
+                src={selectedImage}
+                alt={product.name}
+                fill
+                sizes="44px"
+                className="object-contain"
+              />
+            </div>
+            <div className="min-w-0">
+              <div className="text-xs font-semibold text-white truncate max-w-[130px] sm:max-w-[200px]">
+                {product.name}
+              </div>
+              <div className="text-xs font-mono font-black text-emerald-400">
+                {formatPrice(product.price * quantity)}
+              </div>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <button
+              onClick={handleAddToCart}
+              className={`px-4 sm:px-5 py-3 rounded-xl font-bold text-xs tracking-wider uppercase flex items-center gap-1.5 transition-all shadow-lg ${addedAnimation
+                  ? "bg-emerald-500 text-black"
+                  : "bg-white text-black active:bg-neutral-200"
+                }`}
+            >
+              <ShoppingBag className="w-3.5 h-3.5" />
+              {addedAnimation ? "Added!" : "Add to Bag"}
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

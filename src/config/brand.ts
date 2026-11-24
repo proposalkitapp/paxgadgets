@@ -41,7 +41,7 @@ export interface BrandConfig {
 export const brandConfig: BrandConfig = {
   name: "Brand",
   wordmark: "BRAND",
-  tagline: "Industrial Design & High-Density Power",
+  tagline: "Industrial Design & High-Density Tech Gadgets",
   market: "Nigeria",
   currency: {
     code: "NGN",
@@ -58,11 +58,13 @@ export const brandConfig: BrandConfig = {
     ],
     footer: {
       shop: [
-        { label: "All Products", href: "/shop" },
+        { label: "All Gadgets", href: "/shop" },
         { label: "Power & Charging", href: "/shop?category=power-charging" },
-        { label: "Audio", href: "/shop?category=audio" },
-        { label: "Mobile Devices", href: "/shop?category=mobile-devices" },
-        { label: "Accessories", href: "/shop?category=accessories" },
+        { label: "Audio & Earpods", href: "/shop?category=audio" },
+        { label: "Cameras & Imaging", href: "/shop?category=cameras" },
+        { label: "Gimbals & Stabilization", href: "/shop?category=gimbals" },
+        { label: "Wearables & Tech", href: "/shop?category=wearables" },
+        { label: "Gear & Accessories", href: "/shop?category=accessories" },
       ],
       support: [
         { label: "Contact Us", href: "/contact" },
@@ -82,22 +84,23 @@ export const brandConfig: BrandConfig = {
     },
   },
   contact: {
-    email: "concierge@brandtech.ng",
-    phone: "+234 (0) 800 000 0000",
+    email: "support@brand.ng",
+    phone: "+234 800 000 0000",
     whatsapp: "+234 800 000 0000",
     address: "Victoria Island, Lagos, Nigeria",
   },
   socials: {
-    twitter: "https://x.com",
+    twitter: "https://twitter.com",
     instagram: "https://instagram.com",
     linkedin: "https://linkedin.com",
   },
   hero: {
-    headline: "Engineered Power. Pure Form.",
-    subheadline: "A precision high-density power cell enveloped in tactile carbon matte with dual bi-directional fast charging.",
-    primaryCta: "Explore Power Bank",
-    primaryCtaHref: "/products/charcoal-fast-charge-power-bank",
-    secondaryCta: "View Catalogue",
-    secondaryCtaHref: "/shop",
+    headline: "Engineered Hardware. Pure Performance.",
+    subheadline:
+      "Precision-milled power banks, spatial earpods, 4K action cameras, and motorized AI gimbals. Built with tactile aerospace alloys and intelligent circuitry for high-intensity creators across Nigeria.",
+    primaryCta: "Explore Catalogue",
+    primaryCtaHref: "/shop",
+    secondaryCta: "Category Architecture",
+    secondaryCtaHref: "/categories",
   },
 };

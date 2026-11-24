@@ -1,31 +1,33 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { User, Package, MapPin, LogOut, CheckCircle2, Clock, ChevronRight, ShoppingBag } from "lucide-react";
-import { brandConfig } from "@/config/brand";
+import { User, Package, MapPin, LogOut, Clock, Truck } from "lucide-react";
 import { formatPrice } from "@/lib/utils";
+import { getOrders } from "@/lib/adminStore";
+import { Order } from "@/types";
 
 export default function AccountPage() {
   const [activeTab, setActiveTab] = useState<"orders" | "addresses" | "profile">("orders");
+  const [userOrders, setUserOrders] = useState<Order[]>([]);
 
-  // Sample order for demonstrative account management
-  const orders = [
-    {
-      reference: "ORD-84920194",
-      date: "Nov 19, 2026",
-      items: [
-        {
-          name: "Futuristic Charcoal Fast-Charge Power Bank",
-          quantity: 1,
-          price: 32500,
-        },
-      ],
-      total: 35000,
-      paymentStatus: "Paid",
-      deliveryStatus: "Processing",
-    },
-  ];
+  useEffect(() => {
+    const loadCustomerOrders = () => {
+      const allOrders = getOrders();
+      // Filter orders for current logged-in customer or default user
+      const customerOrders = allOrders.filter(
+        (o) =>
+          o.customer.email.toLowerCase() === "daniel@example.com" ||
+          o.customer.fullName.toLowerCase().includes("daniel")
+      );
+      setUserOrders(customerOrders.length > 0 ? customerOrders : allOrders.slice(0, 3));
+    };
+
+    loadCustomerOrders();
+
+    window.addEventListener("pax_admin_store_updated", loadCustomerOrders);
+    return () => window.removeEventListener("pax_admin_store_updated", loadCustomerOrders);
+  }, []);
 
   return (
     <div className="pt-28 pb-20 bg-[#090a0d] min-h-screen">
@@ -105,48 +107,61 @@ export default function AccountPage() {
               <div className="space-y-4">
                 <h2 className="text-base font-bold text-white mb-2">Order History</h2>
 
-                {orders.map((order) => (
-                  <div
-                    key={order.reference}
-                    className="p-6 rounded-2xl bg-[#0e0f14] border border-[#1f2128] space-y-4"
-                  >
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-[#181920] pb-4 gap-2 text-xs">
-                      <div>
-                        <span className="text-neutral-500 font-mono">Reference: </span>
-                        <span className="font-mono font-bold text-white">{order.reference}</span>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <span className="px-2.5 py-0.5 rounded text-[11px] font-mono font-semibold bg-emerald-950/60 text-emerald-400 border border-emerald-800/40">
-                          {order.paymentStatus}
-                        </span>
-                        <span className="px-2.5 py-0.5 rounded text-[11px] font-mono font-semibold bg-cyan-950/60 text-cyan-400 border border-cyan-800/40 flex items-center gap-1">
-                          <Clock className="w-3 h-3" />
-                          {order.deliveryStatus}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      {order.items.map((item, idx) => (
-                        <div key={idx} className="flex justify-between text-xs">
-                          <span className="text-neutral-200">
-                            {item.quantity}x {item.name}
+                {userOrders.length === 0 ? (
+                  <div className="p-8 rounded-2xl bg-[#0e0f14] border border-[#1f2128] text-center text-neutral-500 font-mono text-xs">
+                    No orders placed yet.
+                  </div>
+                ) : (
+                  userOrders.map((order) => (
+                    <div
+                      key={order.id}
+                      className="p-6 rounded-2xl bg-[#0e0f14] border border-[#1f2128] space-y-4"
+                    >
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-[#181920] pb-4 gap-2 text-xs">
+                        <div>
+                          <span className="text-neutral-500 font-mono">Reference: </span>
+                          <span className="font-mono font-bold text-white">{order.id}</span>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <span className="px-2.5 py-0.5 rounded text-[11px] font-mono font-semibold bg-emerald-950/60 text-emerald-400 border border-emerald-800/40">
+                            {order.paymentStatus}
                           </span>
-                          <span className="font-mono text-neutral-400">
-                            {formatPrice(item.price * item.quantity)}
+                          <span className="px-2.5 py-0.5 rounded text-[11px] font-mono font-semibold bg-cyan-950/60 text-cyan-400 border border-cyan-800/40 flex items-center gap-1">
+                            <Clock className="w-3 h-3" />
+                            {order.status}
                           </span>
                         </div>
-                      ))}
-                    </div>
+                      </div>
 
-                    <div className="pt-3 border-t border-[#181920] flex items-center justify-between text-xs font-mono">
-                      <span className="text-neutral-500">Total Charged</span>
-                      <span className="text-sm font-bold text-cyan-400">
-                        {formatPrice(order.total)}
-                      </span>
+                      <div className="space-y-2">
+                        {order.items.map((item, idx) => (
+                          <div key={idx} className="flex justify-between text-xs">
+                            <span className="text-neutral-200">
+                              {item.quantity}x {item.name}
+                            </span>
+                            <span className="font-mono text-neutral-400">
+                              {formatPrice(item.price * item.quantity)}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+
+                      {order.assignedDistributorName && (
+                        <div className="text-[11px] font-mono text-cyan-400/90 flex items-center gap-1.5 pt-1">
+                          <Truck className="w-3.5 h-3.5 text-cyan-400" />
+                          <span>Dispatched via: {order.assignedDistributorName}</span>
+                        </div>
+                      )}
+
+                      <div className="pt-3 border-t border-[#181920] flex items-center justify-between text-xs font-mono">
+                        <span className="text-neutral-500">Total Charged</span>
+                        <span className="text-sm font-bold text-cyan-400">
+                          {formatPrice(order.totalAmount)}
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))
+                )}
               </div>
             )}
 

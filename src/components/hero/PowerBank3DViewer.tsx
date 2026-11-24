@@ -3,11 +3,21 @@
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import * as THREE from "three";
-import { Rotate3d, Sparkles, AlertCircle } from "lucide-react";
+import { Rotate3d, AlertCircle } from "lucide-react";
 
 interface PowerBank3DViewerProps {
   fallbackImage?: string;
   className?: string;
+}
+
+function checkWebGLSupport(): boolean {
+  if (typeof window === "undefined") return true;
+  try {
+    const canvas = document.createElement("canvas");
+    return Boolean(canvas.getContext("webgl") || canvas.getContext("experimental-webgl"));
+  } catch {
+    return false;
+  }
 }
 
 export default function PowerBank3DViewer({
@@ -15,36 +25,18 @@ export default function PowerBank3DViewer({
   className = "",
 }: PowerBank3DViewerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [hasWebGL, setHasWebGL] = useState(true);
+  const [hasWebGL] = useState(checkWebGLSupport);
   const [isLoading, setIsLoading] = useState(true);
   const [isInteracting, setIsInteracting] = useState(false);
-  const [mode, setMode] = useState<"3d" | "render">("3d");
+  const [mode, setMode] = useState<"3d" | "render">(() => (checkWebGLSupport() ? "3d" : "render"));
 
   useEffect(() => {
-    if (mode !== "3d") {
-      setIsLoading(false);
+    if (mode !== "3d" || !hasWebGL) {
       return;
     }
 
     const container = containerRef.current;
     if (!container) return;
-
-    // Check WebGL availability
-    try {
-      const canvas = document.createElement("canvas");
-      const gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
-      if (!gl) {
-        setHasWebGL(false);
-        setMode("render");
-        setIsLoading(false);
-        return;
-      }
-    } catch {
-      setHasWebGL(false);
-      setMode("render");
-      setIsLoading(false);
-      return;
-    }
 
     let animationFrameId: number;
     let width = container.clientWidth || 520;
@@ -347,7 +339,7 @@ export default function PowerBank3DViewer({
     window.addEventListener("resize", handleResize);
 
     // Animation Loop
-    let clock = new THREE.Clock();
+    const clock = new THREE.Clock();
     const animate = () => {
       animationFrameId = requestAnimationFrame(animate);
       const elapsedTime = clock.getElapsedTime();
@@ -410,7 +402,7 @@ export default function PowerBank3DViewer({
 
       renderer.dispose();
     };
-  }, [mode]);
+  }, [mode, hasWebGL]);
 
   return (
     <div className={`relative flex flex-col items-center justify-center ${className}`}>
@@ -419,9 +411,8 @@ export default function PowerBank3DViewer({
         {mode === "3d" && hasWebGL ? (
           <div
             ref={containerRef}
-            className={`w-full h-full cursor-grab active:cursor-grabbing transition-opacity duration-700 ${
-              isLoading ? "opacity-0" : "opacity-100"
-            }`}
+            className={`w-full h-full cursor-grab active:cursor-grabbing transition-opacity duration-700 ${isLoading ? "opacity-0" : "opacity-100"
+              }`}
           />
         ) : (
           <div className="relative w-full h-full flex items-center justify-center p-4">

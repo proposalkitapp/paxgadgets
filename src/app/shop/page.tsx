@@ -1,34 +1,38 @@
 "use client";
 
-import React, { useState, useMemo, useEffect, Suspense } from "react";
+import React, { useState, useMemo, Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { Search, ShoppingBag, ArrowRight } from "lucide-react";
+import { Search, ShoppingBag } from "lucide-react";
 import { products, categories } from "@/data/products";
 import { formatPrice } from "@/lib/utils";
 import { useCart } from "@/context/CartContext";
+import AIAdvisorBanner from "@/components/ai/AIAdvisorBanner";
 
 function ShopContent() {
   const { addToCart } = useCart();
   const searchParams = useSearchParams();
 
-  const [selectedCategory, setSelectedCategory] = useState<string>("all");
-  const [availabilityFilter, setAvailabilityFilter] = useState<string>("all");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [sortBy, setSortBy] = useState<string>("featured");
+  const urlCategory = searchParams.get("category") || "all";
+  const urlQuery = searchParams.get("q") || "";
 
-  // Read URL query params on mount or when params change
-  useEffect(() => {
-    const categoryParam = searchParams.get("category");
-    if (categoryParam) {
-      setSelectedCategory(categoryParam);
-    }
-    const queryParam = searchParams.get("q");
-    if (queryParam) {
-      setSearchQuery(queryParam);
-    }
-  }, [searchParams]);
+  const [selectedCategory, setSelectedCategory] = useState(urlCategory);
+  const [prevUrlCategory, setPrevUrlCategory] = useState(urlCategory);
+  if (urlCategory !== prevUrlCategory) {
+    setPrevUrlCategory(urlCategory);
+    setSelectedCategory(urlCategory);
+  }
+
+  const [availabilityFilter, setAvailabilityFilter] = useState<string>("all");
+  const [searchQuery, setSearchQuery] = useState(urlQuery);
+  const [prevUrlQuery, setPrevUrlQuery] = useState(urlQuery);
+  if (urlQuery !== prevUrlQuery) {
+    setPrevUrlQuery(urlQuery);
+    setSearchQuery(urlQuery);
+  }
+
+  const [sortBy, setSortBy] = useState<string>("featured");
 
   const filteredProducts = useMemo(() => {
     return products
@@ -66,8 +70,11 @@ function ShopContent() {
           </p>
         </div>
 
+        {/* AI Hardware Advisor Banner */}
+        <AIAdvisorBanner />
+
         {/* Filter and Search Bar */}
-        <div className="p-4 rounded-xl bg-[#0f1014] border border-[#1f2026] mb-8 space-y-4">
+        <div className="p-4 sm:p-5 rounded-2xl bg-[#0f1014] border border-[#1f2026] mb-8 space-y-4">
           <div className="flex flex-col md:flex-row gap-3 items-center justify-between">
             {/* Search */}
             <div className="relative w-full md:w-80">
@@ -78,17 +85,17 @@ function ShopContent() {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search products..."
                 aria-label="Search catalogue products"
-                className="w-full bg-[#15161c] border border-[#252730] text-xs text-neutral-200 pl-9 pr-3.5 py-2.5 rounded-lg focus:outline-none focus:border-emerald-400"
+                className="w-full bg-[#15161c] border border-[#252730] text-base sm:text-xs text-neutral-200 pl-9 pr-3.5 py-3 sm:py-2.5 rounded-xl focus:outline-none focus:border-emerald-400"
               />
             </div>
 
             {/* Sorting & Availability Controls */}
-            <div className="flex items-center gap-3 w-full md:w-auto">
+            <div className="flex items-center gap-2.5 w-full md:w-auto">
               <select
                 value={availabilityFilter}
                 onChange={(e) => setAvailabilityFilter(e.target.value)}
                 aria-label="Filter products by availability status"
-                className="bg-[#15161c] border border-[#252730] text-xs text-neutral-300 px-3 py-2.5 rounded-lg focus:outline-none"
+                className="flex-1 md:flex-none bg-[#15161c] border border-[#252730] text-xs text-neutral-300 px-3 py-3 sm:py-2.5 rounded-xl focus:outline-none"
               >
                 <option value="all">All Availability</option>
                 <option value="Available">In Stock Only</option>
@@ -99,7 +106,7 @@ function ShopContent() {
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
                 aria-label="Sort products by criteria"
-                className="bg-[#15161c] border border-[#252730] text-xs text-neutral-300 px-3 py-2.5 rounded-lg focus:outline-none"
+                className="flex-1 md:flex-none bg-[#15161c] border border-[#252730] text-xs text-neutral-300 px-3 py-3 sm:py-2.5 rounded-xl focus:outline-none"
               >
                 <option value="featured">Featured First</option>
                 <option value="price-low">Price: Low to High</option>
@@ -110,14 +117,13 @@ function ShopContent() {
           </div>
 
           {/* Category Tabs */}
-          <div className="flex items-center gap-2 overflow-x-auto pt-2 border-t border-[#1a1b22] pb-1">
+          <div className="flex items-center gap-2 overflow-x-auto pt-2 border-t border-[#1a1b22] pb-1 scrollbar-none touch-pan-x">
             <button
               onClick={() => setSelectedCategory("all")}
-              className={`px-3 py-1.5 rounded-md text-xs font-medium whitespace-nowrap transition-colors ${
-                selectedCategory === "all"
+              className={`px-3.5 py-2 sm:py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${selectedCategory === "all"
                   ? "bg-white text-black font-semibold"
                   : "bg-[#14151a] text-neutral-400 hover:text-white"
-              }`}
+                }`}
             >
               All Categories
             </button>
@@ -125,11 +131,10 @@ function ShopContent() {
               <button
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.slug)}
-                className={`px-3 py-1.5 rounded-md text-xs font-medium whitespace-nowrap transition-colors ${
-                  selectedCategory === cat.slug
+                className={`px-3.5 py-2 sm:py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${selectedCategory === cat.slug
                     ? "bg-white text-black font-semibold"
                     : "bg-[#14151a] text-neutral-400 hover:text-white"
-                }`}
+                  }`}
               >
                 {cat.name}
               </button>
@@ -138,7 +143,7 @@ function ShopContent() {
         </div>
 
         {/* Product Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
           {filteredProducts.map((product) => {
             const isAvailable = product.availabilityStatus === "Available";
 
@@ -157,18 +162,16 @@ function ShopContent() {
                     alt={product.name}
                     fill
                     sizes="(max-width: 768px) 100vw, 300px"
-                    className={`object-contain p-4 group-hover:scale-105 transition-transform duration-500 ${
-                      !isAvailable ? "filter grayscale opacity-75" : ""
-                    }`}
+                    className={`object-contain p-4 group-hover:scale-105 transition-transform duration-500 ${!isAvailable ? "filter grayscale opacity-75" : ""
+                      }`}
                   />
                   {/* Availability Badge */}
                   <div className="absolute top-3 left-3">
                     <span
-                      className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase tracking-wider ${
-                        isAvailable
+                      className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase tracking-wider ${isAvailable
                           ? "bg-emerald-950/80 text-emerald-400 border border-emerald-800/50"
                           : "bg-amber-950/80 text-amber-400 border border-amber-800/50"
-                      }`}
+                        }`}
                     >
                       {product.availabilityStatus}
                     </span>

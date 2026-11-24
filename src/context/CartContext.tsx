@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState, useMemo } from "react";
 import { Product, CartItem } from "@/types";
+import { trackAddToCart } from "@/lib/analytics";
 
 interface CartContextType {
   cart: CartItem[];
@@ -20,41 +21,46 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 const CART_STORAGE_KEY = "brand_guest_cart_v1";
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
-  const [cart, setCart] = useState<CartItem[]>([]);
-  const [isCartOpen, setIsCartOpen] = useState(false);
-  const [isHydrated, setIsHydrated] = useState(false);
-
-  // Hydrate cart from localStorage on client mount
-  useEffect(() => {
+  const [cart, setCart] = useState<CartItem[]>(() => {
+    if (typeof window === "undefined") return [];
     try {
       const stored = localStorage.getItem(CART_STORAGE_KEY);
       if (stored) {
         const parsed = JSON.parse(stored);
         if (Array.isArray(parsed)) {
-          setCart(parsed);
+          return parsed;
         }
       }
     } catch (e) {
       console.warn("Failed to read guest cart from localStorage", e);
-    } finally {
-      setIsHydrated(true);
     }
-  }, []);
+    return [];
+  });
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
-  // Save cart to localStorage on changes after hydration
+  // Save cart to localStorage on changes
   useEffect(() => {
-    if (!isHydrated) return;
     try {
       localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
     } catch (e) {
       console.warn("Failed to persist guest cart to localStorage", e);
     }
-  }, [cart, isHydrated]);
+  }, [cart]);
 
   const addToCart = (product: Product, quantity: number = 1) => {
     if (product.availabilityStatus !== "Available") {
       return;
     }
+
+    // Trigger analytics for cart additions across storefront
+    trackAddToCart({
+      productId: product.id,
+      productName: product.name,
+      category: product.category,
+      price: product.price,
+      quantity,
+      totalValue: product.price * quantity,
+    });
 
     setCart((prevCart) => {
       const existingIndex = prevCart.findIndex((item) => item.product.id === product.id);

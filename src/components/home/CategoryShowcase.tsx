@@ -2,14 +2,24 @@
 
 import React from "react";
 import Link from "next/link";
-import { BatteryCharging, Headphones, Smartphone, Cable, ArrowUpRight } from "lucide-react";
+import {
+  BatteryCharging,
+  Headphones,
+  Camera,
+  Video,
+  Watch,
+  Cable,
+  ArrowUpRight,
+} from "lucide-react";
 import { categories } from "@/data/products";
 
 const categoryIcons: Record<string, React.ReactNode> = {
   "power-charging": <BatteryCharging className="w-5 h-5 text-emerald-400" />,
-  audio: <Headphones className="w-5 h-5 text-neutral-300" />,
-  "mobile-devices": <Smartphone className="w-5 h-5 text-neutral-300" />,
-  accessories: <Cable className="w-5 h-5 text-neutral-300" />,
+  audio: <Headphones className="w-5 h-5 text-cyan-400" />,
+  cameras: <Camera className="w-5 h-5 text-rose-400" />,
+  gimbals: <Video className="w-5 h-5 text-amber-400" />,
+  wearables: <Watch className="w-5 h-5 text-purple-400" />,
+  accessories: <Cable className="w-5 h-5 text-emerald-400" />,
 };
 
 export default function CategoryShowcase() {
@@ -27,11 +37,11 @@ export default function CategoryShowcase() {
             </h2>
           </div>
           <p className="text-xs text-neutral-400 max-w-sm mt-2 md:mt-0 font-light leading-relaxed">
-            High-density power solutions and acoustic accessories built with minimal Scandinavian industrial design principles.
+            High-density power units, spatial earpods, 4K action cameras, AI gimbals, and titanium tech accessories built for high daily endurance.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {categories.map((category) => (
             <Link
               key={category.id}
@@ -54,14 +64,13 @@ export default function CategoryShowcase() {
               {/* Status pill */}
               <div className="mt-6 pt-4 border-t border-[#181920] flex items-center justify-between text-[11px] font-mono">
                 <span className="text-neutral-500">
-                  {category.itemCount > 0 ? `${category.itemCount} Product Live` : "Validation Pipeline"}
+                  {category.itemCount > 0 ? `${category.itemCount} Products Live` : "Validation Pipeline"}
                 </span>
                 <span
-                  className={`px-2.5 py-0.5 rounded-full text-[10px] font-semibold ${
-                    category.itemCount > 0
+                  className={`px-2.5 py-0.5 rounded-full text-[10px] font-semibold ${category.itemCount > 0
                       ? "bg-emerald-950/70 text-emerald-400 border border-emerald-800/50"
                       : "bg-[#14151a] text-neutral-400 border border-[#22242c]"
-                  }`}
+                    }`}
                 >
                   {category.itemCount > 0 ? "In Stock" : "Coming Soon"}
                 </span>

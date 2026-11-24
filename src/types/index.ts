@@ -60,3 +60,76 @@ export interface UserProfile {
   avatarUrl?: string;
   phone?: string;
 }
+
+export type OrderStatus =
+  | "Pending"
+  | "Confirmed"
+  | "Processing"
+  | "Assigned"
+  | "Out for Delivery"
+  | "Delivered"
+  | "Cancelled";
+
+export type PaymentMethodType = "card" | "transfer" | "ussd";
+export type PaymentStatusType = "Paid" | "Pending" | "Failed";
+
+export interface OrderItem {
+  id: string;
+  name: string;
+  price: number;
+  quantity: number;
+  category: string;
+  heroImage?: string;
+}
+
+export interface CustomerInfo {
+  fullName: string;
+  email: string;
+  phone: string;
+  state: string;
+  city: string;
+  address: string;
+  instructions?: string;
+}
+
+export interface Order {
+  id: string;
+  customer: CustomerInfo;
+  items: OrderItem[];
+  subtotal: number;
+  deliveryFee: number;
+  totalAmount: number;
+  paymentMethod: PaymentMethodType;
+  paymentStatus: PaymentStatusType;
+  status: OrderStatus;
+  createdAt: string;
+  updatedAt: string;
+  assignedDistributorId?: string;
+  assignedDistributorName?: string;
+  notes?: string;
+}
+
+export type DistributorStatus = "Active" | "Standby" | "Suspended";
+export type DistributorVehicle = "Van" | "Motorbike" | "Fleet" | "Express Courier";
+
+export interface Distributor {
+  id: string;
+  name: string;
+  contactPerson: string;
+  phone: string;
+  email: string;
+  coverageArea: string;
+  vehicleType: DistributorVehicle;
+  status: DistributorStatus;
+  activeOrdersCount: number;
+  completedDeliveries: number;
+  joinedDate: string;
+}
+
+export interface AdminUser {
+  id: string;
+  email: string;
+  name: string;
+  role: "admin" | "superadmin";
+  lastLogin?: string;
+}

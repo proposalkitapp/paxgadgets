@@ -3,9 +3,10 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { ShoppingBag, User, Search, Menu, X, ArrowUpRight } from "lucide-react";
+import { ShoppingBag, User, Search, Menu, X, ArrowUpRight, Sparkles } from "lucide-react";
 import { brandConfig } from "@/config/brand";
 import { useCart } from "@/context/CartContext";
+import AIProductAdvisorModal from "@/components/ai/AIProductAdvisorModal";
 
 export default function Navbar() {
   const router = useRouter();
@@ -15,6 +16,7 @@ export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [advisorOpen, setAdvisorOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -27,11 +29,10 @@ export default function Navbar() {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
-          isScrolled
-            ? "bg-[#08090a]/85 backdrop-blur-md border-b border-[#181920] py-3.5"
-            : "bg-transparent py-5"
-        }`}
+        className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${isScrolled
+          ? "bg-[#08090a]/85 backdrop-blur-md border-b border-[#181920] py-3.5"
+          : "bg-transparent py-5"
+          }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
@@ -52,9 +53,8 @@ export default function Navbar() {
                     <Link
                       key={item.href}
                       href={item.href}
-                      className={`text-xs font-medium tracking-wider uppercase transition-colors hover:text-white ${
-                        isActive ? "text-white font-semibold flex items-center gap-1.5" : "text-neutral-400"
-                      }`}
+                      className={`text-xs font-medium tracking-wider uppercase transition-colors hover:text-white ${isActive ? "text-white font-semibold flex items-center gap-1.5" : "text-neutral-400"
+                        }`}
                     >
                       {isActive && <span className="w-1 h-1 rounded-full bg-emerald-400" />}
                       {item.label}
@@ -65,11 +65,22 @@ export default function Navbar() {
             </div>
 
             {/* Right: Actions */}
-            <div className="flex items-center gap-2.5 sm:gap-3.5">
+            <div className="flex items-center gap-1.5 sm:gap-3">
+              {/* AI Product Advisor Button */}
+              <button
+                onClick={() => setAdvisorOpen(true)}
+                className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full bg-emerald-950/60 hover:bg-emerald-900/60 border border-emerald-800/60 text-emerald-400 hover:text-emerald-300 transition-all text-xs font-mono font-medium shadow-[0_0_12px_rgba(0,230,118,0.15)] min-h-[38px]"
+                aria-label="Open AI Product Advisor"
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">AI Advisor</span>
+                <span className="text-[10px] sm:hidden font-bold">AI</span>
+              </button>
+
               {/* Search Toggle */}
               <button
                 onClick={() => setSearchOpen(!searchOpen)}
-                className="p-2 text-neutral-400 hover:text-white hover:bg-[#131418] rounded-full transition-colors"
+                className="w-10 h-10 flex items-center justify-center text-neutral-400 hover:text-white hover:bg-[#131418] rounded-full transition-colors"
                 aria-label="Search all products"
               >
                 <Search className="w-4 h-4" />
@@ -78,12 +89,12 @@ export default function Navbar() {
               {/* Shopping Bag Icon with Emerald Badge Counter */}
               <button
                 onClick={() => setIsCartOpen(true)}
-                className="relative p-2 text-neutral-400 hover:text-white hover:bg-[#131418] rounded-full transition-colors"
+                className="relative w-10 h-10 flex items-center justify-center text-neutral-400 hover:text-white hover:bg-[#131418] rounded-full transition-colors"
                 aria-label="Open shopping bag"
               >
                 <ShoppingBag className="w-4 h-4" />
                 {totalItems > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full bg-emerald-400 text-black text-[10px] font-bold font-mono flex items-center justify-center shadow-[0_0_8px_#00e676]">
+                  <span className="absolute top-1 right-1 w-4 h-4 rounded-full bg-emerald-400 text-black text-[10px] font-bold font-mono flex items-center justify-center shadow-[0_0_8px_#00e676]">
                     {totalItems}
                   </span>
                 )}
@@ -92,7 +103,7 @@ export default function Navbar() {
               {/* Account Link */}
               <Link
                 href="/account"
-                className="p-2 text-neutral-400 hover:text-white hover:bg-[#131418] rounded-full transition-colors hidden sm:flex items-center gap-1.5 text-xs font-medium"
+                className="w-10 h-10 text-neutral-400 hover:text-white hover:bg-[#131418] rounded-full transition-colors hidden sm:flex items-center justify-center text-xs font-medium"
                 aria-label="Customer Account"
               >
                 <User className="w-4 h-4" />
@@ -101,7 +112,7 @@ export default function Navbar() {
               {/* Mobile Menu Button */}
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="p-2 text-neutral-400 hover:text-white hover:bg-[#131418] rounded-full md:hidden transition-colors"
+                className="w-10 h-10 flex items-center justify-center text-neutral-400 hover:text-white hover:bg-[#131418] rounded-full md:hidden transition-colors"
                 aria-label="Toggle Navigation Menu"
               >
                 {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -164,6 +175,20 @@ export default function Navbar() {
           </div>
 
           <div className="flex-1 p-6 space-y-4">
+            <button
+              onClick={() => {
+                setMobileMenuOpen(false);
+                setAdvisorOpen(true);
+              }}
+              className="w-full flex items-center justify-between py-3 text-lg font-medium text-emerald-400 border-b border-[#14151a]"
+            >
+              <span className="flex items-center gap-2">
+                <Sparkles className="w-5 h-5" />
+                AI Hardware Advisor
+              </span>
+              <ArrowUpRight className="w-4 h-4 text-emerald-400" />
+            </button>
+
             {brandConfig.navigation.main.map((item) => (
               <Link
                 key={item.href}
@@ -192,6 +217,12 @@ export default function Navbar() {
           </div>
         </div>
       )}
+
+      {/* AI Product Advisor Modal */}
+      <AIProductAdvisorModal
+        isOpen={advisorOpen}
+        onClose={() => setAdvisorOpen(false)}
+      />
     </>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Cpu, ShieldCheck, Zap, Globe, Layers, CheckCircle2 } from "lucide-react";
+import { Cpu, ShieldCheck, Globe, CheckCircle2 } from "lucide-react";
 import { brandConfig } from "@/config/brand";
 
 export default function AboutPage() {
