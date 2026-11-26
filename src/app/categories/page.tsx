@@ -15,27 +15,27 @@ import {
 import { categories } from "@/data/products";
 
 const icons: Record<string, React.ReactNode> = {
-  "power-charging": <BatteryCharging className="w-8 h-8 text-cyan-400" />,
-  audio: <Headphones className="w-8 h-8 text-blue-400" />,
-  cameras: <Camera className="w-8 h-8 text-rose-400" />,
-  gimbals: <Video className="w-8 h-8 text-amber-400" />,
-  wearables: <Watch className="w-8 h-8 text-purple-400" />,
+  "power-charging": <BatteryCharging className="w-8 h-8 text-emerald-400" />,
+  audio: <Headphones className="w-8 h-8 text-emerald-400" />,
+  cameras: <Camera className="w-8 h-8 text-emerald-400" />,
+  gimbals: <Video className="w-8 h-8 text-emerald-400" />,
+  wearables: <Watch className="w-8 h-8 text-emerald-400" />,
   accessories: <Cable className="w-8 h-8 text-emerald-400" />,
 };
 
 export default function CategoriesPage() {
   return (
-    <div className="pt-28 pb-20 bg-[#090a0d] min-h-screen">
+    <div className="pt-28 pb-20 bg-[#08090b] min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-12">
-          <span className="text-xs font-mono uppercase tracking-widest text-cyan-400">
-            Navigation Architecture
+          <span className="text-xs font-mono uppercase tracking-widest text-emerald-400">
+            Hardware Architecture
           </span>
           <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-white mt-1">
             Product Categories
           </h1>
-          <p className="text-xs text-neutral-400 mt-2 max-w-xl">
-            Browse our full hardware divisions across high-density power, spatial acoustics & earpods, 4K cameras, 3-axis gimbals, aerospace wearables, and engineering accessories.
+          <p className="text-xs text-neutral-400 mt-2 max-w-xl font-light leading-relaxed">
+            Browse our full hardware divisions across high-density power, spatial acoustics, 4K cameras, 3-axis gimbals, aerospace wearables, and engineering accessories.
           </p>
         </div>
 

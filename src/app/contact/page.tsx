@@ -29,7 +29,7 @@ export default function ContactPage() {
 
   const faqs = [
     {
-      q: "Where does the brand ship to across Nigeria?",
+      q: "Where does PAX ship across Nigeria?",
       a: "We fulfill direct orders to all 36 Nigerian states and the FCT. Deliveries within Lagos typically arrive within 24 hours; other states take 48-72 hours.",
     },
     {
@@ -47,17 +47,17 @@ export default function ContactPage() {
   ];
 
   return (
-    <div className="pt-28 pb-20 bg-[#090a0d] min-h-screen">
+    <div className="pt-28 pb-20 bg-[#08090b] min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-14">
-          <span className="text-xs font-mono uppercase tracking-widest text-cyan-400">
+          <span className="text-xs font-mono uppercase tracking-widest text-emerald-400">
             Assistance & Help Desk
           </span>
           <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-white mt-1">
             Contact Direct Support
           </h1>
-          <p className="text-xs text-neutral-400 mt-2 max-w-xl">
-            Have questions regarding specifications, warranty coverage, or delivery status? Our team is available directly.
+          <p className="text-xs text-neutral-400 mt-2 max-w-xl font-light leading-relaxed">
+            Have questions regarding specifications, warranty coverage, or delivery status? Our engineering team is available directly.
           </p>
         </div>
 
@@ -66,14 +66,14 @@ export default function ContactPage() {
           <div className="lg:col-span-5 space-y-6">
             <div className="p-6 rounded-2xl bg-[#0e0f14] border border-[#1f2128] space-y-4">
               <div className="flex items-center gap-3">
-                <div className="p-3 rounded-xl bg-[#14161d] text-cyan-400">
+                <div className="p-3 rounded-xl bg-[#14161d] text-emerald-400">
                   <Mail className="w-5 h-5" />
                 </div>
                 <div>
                   <div className="text-xs text-neutral-500 font-mono">Email Support</div>
                   <a
                     href={`mailto:${brandConfig.contact.email}`}
-                    className="text-sm font-semibold text-white hover:text-cyan-400 transition-colors"
+                    className="text-sm font-semibold text-white hover:text-emerald-400 transition-colors"
                   >
                     {brandConfig.contact.email}
                   </a>
@@ -81,14 +81,14 @@ export default function ContactPage() {
               </div>
 
               <div className="flex items-center gap-3">
-                <div className="p-3 rounded-xl bg-[#14161d] text-cyan-400">
+                <div className="p-3 rounded-xl bg-[#14161d] text-emerald-400">
                   <Phone className="w-5 h-5" />
                 </div>
                 <div>
                   <div className="text-xs text-neutral-500 font-mono">Telephone Inquiries</div>
                   <a
                     href={`tel:${brandConfig.contact.phone}`}
-                    className="text-sm font-semibold text-white hover:text-cyan-400 transition-colors"
+                    className="text-sm font-semibold text-white hover:text-emerald-400 transition-colors"
                   >
                     {brandConfig.contact.phone}
                   </a>
@@ -141,7 +141,7 @@ export default function ContactPage() {
                   </p>
                   <button
                     onClick={() => setIsSubmitted(false)}
-                    className="text-xs font-mono text-cyan-400 hover:underline pt-2 inline-block"
+                    className="text-xs font-mono text-emerald-400 hover:underline pt-2 inline-block"
                   >
                     Submit Another Inquiry
                   </button>
@@ -157,7 +157,7 @@ export default function ContactPage() {
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         placeholder="John Doe"
-                        className="w-full bg-[#13141a] border border-[#232530] text-neutral-200 px-3.5 py-2.5 rounded-lg focus:outline-none focus:border-cyan-400"
+                        className="w-full bg-[#13141a] border border-[#232530] text-neutral-200 px-3.5 py-2.5 rounded-lg focus:outline-none focus:border-emerald-400"
                       />
                     </div>
                     <div>
@@ -168,7 +168,7 @@ export default function ContactPage() {
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         placeholder="john@example.com"
-                        className="w-full bg-[#13141a] border border-[#232530] text-neutral-200 px-3.5 py-2.5 rounded-lg focus:outline-none focus:border-cyan-400"
+                        className="w-full bg-[#13141a] border border-[#232530] text-neutral-200 px-3.5 py-2.5 rounded-lg focus:outline-none focus:border-emerald-400"
                       />
                     </div>
                   </div>
@@ -181,7 +181,7 @@ export default function ContactPage() {
                       value={formData.subject}
                       onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                       placeholder="Product inquiry / Order tracking / Warranty claim"
-                      className="w-full bg-[#13141a] border border-[#232530] text-neutral-200 px-3.5 py-2.5 rounded-lg focus:outline-none focus:border-cyan-400"
+                      className="w-full bg-[#13141a] border border-[#232530] text-neutral-200 px-3.5 py-2.5 rounded-lg focus:outline-none focus:border-emerald-400"
                     />
                   </div>
 
@@ -193,7 +193,7 @@ export default function ContactPage() {
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                       placeholder="Describe your inquiry with detail..."
-                      className="w-full bg-[#13141a] border border-[#232530] text-neutral-200 p-3.5 rounded-lg focus:outline-none focus:border-cyan-400 resize-none"
+                      className="w-full bg-[#13141a] border border-[#232530] text-neutral-200 p-3.5 rounded-lg focus:outline-none focus:border-emerald-400 resize-none"
                     />
                   </div>
 
@@ -214,7 +214,7 @@ export default function ContactPage() {
         {/* FAQs */}
         <div className="border-t border-[#1c1d22] pt-14">
           <div className="text-center max-w-xl mx-auto mb-10">
-            <span className="text-xs font-mono uppercase tracking-widest text-cyan-400">
+            <span className="text-xs font-mono uppercase tracking-widest text-emerald-400">
               Quick Answers
             </span>
             <h2 className="text-2xl font-bold text-white mt-1">Frequently Asked Questions</h2>
@@ -224,7 +224,7 @@ export default function ContactPage() {
             {faqs.map((faq, idx) => (
               <div key={idx} className="p-5 rounded-xl bg-[#0e0f14] border border-[#1f2128]">
                 <h3 className="text-sm font-semibold text-neutral-200 flex items-start gap-2">
-                  <HelpCircle className="w-4 h-4 text-cyan-400 flex-shrink-0 mt-0.5" />
+                  <HelpCircle className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
                   {faq.q}
                 </h3>
                 <p className="text-xs text-neutral-400 mt-2 pl-6 leading-relaxed">

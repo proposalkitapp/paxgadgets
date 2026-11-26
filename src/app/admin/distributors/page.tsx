@@ -33,8 +33,8 @@ const VEHICLE_OPTIONS: DistributorVehicle[] = [
 ];
 
 export default function AdminDistributorsPage() {
-  const [distributors, setDistributors] = useState<Distributor[]>([]);
-  const [orders, setOrders] = useState<Order[]>([]);
+  const [distributors, setDistributors] = useState<Distributor[]>(() => getDistributors());
+  const [orders, setOrders] = useState<Order[]>(() => getOrders());
   const [searchQuery, setSearchQuery] = useState("");
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [selectedDistributor, setSelectedDistributor] = useState<Distributor | null>(null);
@@ -57,8 +57,6 @@ export default function AdminDistributorsPage() {
   };
 
   useEffect(() => {
-    loadData();
-
     const handleUpdate = () => {
       setDistributors(getDistributors());
       setOrders(getOrders());
@@ -222,11 +220,10 @@ export default function AdminDistributorsPage() {
                       {dist.name}
                     </span>
                     <span
-                      className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold border ${
-                        dist.status === "Active"
+                      className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold border ${dist.status === "Active"
                           ? "bg-emerald-950/80 text-emerald-300 border-emerald-800/60"
                           : "bg-neutral-800 text-neutral-400 border-neutral-700"
-                      }`}
+                        }`}
                     >
                       {dist.status}
                     </span>

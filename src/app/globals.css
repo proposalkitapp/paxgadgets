@@ -81,9 +81,3 @@ body {
 .product-contact-shadow {
   box-shadow: 0 45px 75px -15px rgba(0, 0, 0, 0.95), 0 0 35px -5px rgba(0, 230, 118, 0.08);
 }
-
-
-/* Floating shadow effect */
-.product-contact-shadow {
-  box-shadow: 0 45px 75px -15px rgba(0, 0, 0, 0.95), 0 0 35px -5px rgba(0, 230, 118, 0.08);
-}

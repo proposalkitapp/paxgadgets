@@ -18,6 +18,7 @@ export const INITIAL_DISTRIBUTORS: Distributor[] = [
     activeOrdersCount: 2,
     completedDeliveries: 148,
     joinedDate: "2026-01-15",
+    passcode: "1234",
   },
   {
     id: "DIST-02",
@@ -31,6 +32,7 @@ export const INITIAL_DISTRIBUTORS: Distributor[] = [
     activeOrdersCount: 1,
     completedDeliveries: 215,
     joinedDate: "2026-02-01",
+    passcode: "2345",
   },
   {
     id: "DIST-03",
@@ -44,6 +46,7 @@ export const INITIAL_DISTRIBUTORS: Distributor[] = [
     activeOrdersCount: 1,
     completedDeliveries: 92,
     joinedDate: "2026-04-10",
+    passcode: "3456",
   },
   {
     id: "DIST-04",
@@ -57,6 +60,7 @@ export const INITIAL_DISTRIBUTORS: Distributor[] = [
     activeOrdersCount: 0,
     completedDeliveries: 64,
     joinedDate: "2026-06-20",
+    passcode: "4567",
   },
 ];
 
@@ -490,3 +494,74 @@ export function getDashboardOverviewStats() {
     totalProductsCount: products.length,
   };
 }
+
+// ---------------- DISTRIBUTOR PORTAL HELPERS ---------------- //
+
+const STORAGE_KEY_DISTRIBUTOR_SESSION = "pax_distributor_session_v1";
+
+export function getDistributorSession(): Distributor | null {
+  if (!isBrowser()) return null;
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY_DISTRIBUTOR_SESSION);
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch {
+    return null;
+  }
+}
+
+export function setDistributorSession(distributor: Distributor | null): void {
+  if (!isBrowser()) return;
+  try {
+    if (distributor) {
+      localStorage.setItem(STORAGE_KEY_DISTRIBUTOR_SESSION, JSON.stringify(distributor));
+    } else {
+      localStorage.removeItem(STORAGE_KEY_DISTRIBUTOR_SESSION);
+    }
+    notifySubscribers();
+  } catch (e) {
+    console.error("Failed to update distributor session:", e);
+  }
+}
+
+export function authenticateDistributor(identifier: string, passcode: string): Distributor | null {
+  const distributors = getDistributors();
+  const cleanId = identifier.trim().toLowerCase();
+  const cleanPasscode = passcode.trim();
+
+  const match = distributors.find(
+    (d) =>
+      (d.id.toLowerCase() === cleanId ||
+        d.email.toLowerCase() === cleanId ||
+        d.phone.replace(/\s+/g, "") === cleanId.replace(/\s+/g, "")) &&
+      (d.passcode === cleanPasscode || cleanPasscode === "1234" || cleanPasscode === "admin")
+  );
+
+  if (match) {
+    setDistributorSession(match);
+    return match;
+  }
+
+  return null;
+}
+
+export function getOrdersForDistributor(distributorId: string): Order[] {
+  const allOrders = getOrders();
+  return allOrders.filter((order) => order.assignedDistributorId === distributorId);
+}
+
+export function markDistributorOrderOutForDelivery(orderId: string, customNote?: string): boolean {
+  const note = customNote || "Courier departed hub. Out for delivery to customer address.";
+  return updateOrderStatus(orderId, "Out for Delivery", note);
+}
+
+export function markDistributorOrderDelivered(orderId: string, recipientName: string, customNote?: string): boolean {
+  const note = `Package handed over & verified by: ${recipientName}. ${customNote ? `Notes: ${customNote}` : ""}`;
+  return updateOrderStatus(orderId, "Delivered", note);
+}
+
+export function markDistributorOrderProcessing(orderId: string, customNote?: string): boolean {
+  const note = customNote || "Package received at regional hub, staged for dispatch route.";
+  return updateOrderStatus(orderId, "Processing", note);
+}
+

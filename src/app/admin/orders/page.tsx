@@ -46,42 +46,28 @@ function OrdersContent() {
   const initialOpenId = searchParams.get("open") || "";
   const initialStatusFilter = (searchParams.get("status") as OrderStatus) || "All";
 
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [distributors, setDistributors] = useState<Distributor[]>([]);
+  const [orders, setOrders] = useState<Order[]>(() => getOrders());
+  const [distributors, setDistributors] = useState<Distributor[]>(() => getDistributors());
   const [selectedStatus, setSelectedStatus] = useState<string>(initialStatusFilter);
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeOrder, setActiveOrder] = useState<Order | null>(null);
+  const [activeOrder, setActiveOrder] = useState<Order | null>(() => {
+    if (!initialOpenId) return null;
+    return getOrders().find((o) => o.id === initialOpenId) || null;
+  });
 
   // Form states inside order modal
-  const [editStatus, setEditStatus] = useState<OrderStatus>("Pending");
-  const [editDistributorId, setEditDistributorId] = useState<string>("");
+  const [editStatus, setEditStatus] = useState<OrderStatus>(() => {
+    if (!initialOpenId) return "Pending";
+    const match = getOrders().find((o) => o.id === initialOpenId);
+    return match ? match.status : "Pending";
+  });
+  const [editDistributorId, setEditDistributorId] = useState<string>(() => {
+    if (!initialOpenId) return "";
+    const match = getOrders().find((o) => o.id === initialOpenId);
+    return match?.assignedDistributorId || "";
+  });
   const [editNote, setEditNote] = useState<string>("");
   const [saveSuccessMsg, setSaveSuccessMsg] = useState<string>("");
-
-  const refreshOrders = () => {
-    const loaded = getOrders();
-    setOrders(loaded);
-    setDistributors(getDistributors());
-
-    if (initialOpenId) {
-      const match = loaded.find((o) => o.id === initialOpenId);
-      if (match) {
-        openOrderModal(match);
-      }
-    }
-  };
-
-  useEffect(() => {
-    refreshOrders();
-
-    const handleUpdate = () => {
-      setOrders(getOrders());
-      setDistributors(getDistributors());
-    };
-
-    window.addEventListener("pax_admin_store_updated", handleUpdate);
-    return () => window.removeEventListener("pax_admin_store_updated", handleUpdate);
-  }, [initialOpenId]);
 
   const openOrderModal = (order: Order) => {
     setActiveOrder(order);
@@ -90,6 +76,16 @@ function OrdersContent() {
     setEditNote("");
     setSaveSuccessMsg("");
   };
+
+  useEffect(() => {
+    const handleUpdate = () => {
+      setOrders(getOrders());
+      setDistributors(getDistributors());
+    };
+
+    window.addEventListener("pax_admin_store_updated", handleUpdate);
+    return () => window.removeEventListener("pax_admin_store_updated", handleUpdate);
+  }, []);
 
   const handleSaveChanges = () => {
     if (!activeOrder) return;
@@ -197,11 +193,10 @@ function OrdersContent() {
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs">
           <button
             onClick={() => setSelectedStatus("All")}
-            className={`px-3 py-1.5 rounded-lg font-mono font-medium whitespace-nowrap transition-colors ${
-              selectedStatus === "All"
+            className={`px-3 py-1.5 rounded-lg font-mono font-medium whitespace-nowrap transition-colors ${selectedStatus === "All"
                 ? "bg-white text-black font-bold"
                 : "bg-[#0e1017] text-neutral-400 hover:text-white border border-[#1c1f2b]"
-            }`}
+              }`}
           >
             All ({orders.length})
           </button>
@@ -212,11 +207,10 @@ function OrdersContent() {
               <button
                 key={status}
                 onClick={() => setSelectedStatus(status)}
-                className={`px-3 py-1.5 rounded-lg font-mono whitespace-nowrap transition-colors flex items-center gap-1.5 ${
-                  isSelected
+                className={`px-3 py-1.5 rounded-lg font-mono whitespace-nowrap transition-colors flex items-center gap-1.5 ${isSelected
                     ? "bg-emerald-500 text-black font-bold"
                     : "bg-[#0e1017] text-neutral-400 hover:text-white border border-[#1c1f2b]"
-                }`}
+                  }`}
               >
                 <span>{status}</span>
                 <span className="text-[10px] opacity-75 font-bold">({count})</span>

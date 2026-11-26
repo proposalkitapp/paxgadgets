@@ -85,8 +85,8 @@ export default function ProductDetailView({ slug }: { slug: string }) {
               <div className="absolute top-4 left-4">
                 <span
                   className={`px-3 py-1 rounded-md text-xs font-mono font-bold uppercase tracking-wider ${isAvailable
-                      ? "bg-emerald-950/80 text-emerald-400 border border-emerald-800/50"
-                      : "bg-amber-950/80 text-amber-400 border border-amber-800/50"
+                    ? "bg-emerald-950/80 text-emerald-400 border border-emerald-800/50"
+                    : "bg-amber-950/80 text-amber-400 border border-amber-800/50"
                     }`}
                 >
                   {product.availabilityStatus}
@@ -102,8 +102,8 @@ export default function ProductDetailView({ slug }: { slug: string }) {
                     key={idx}
                     onClick={() => setSelectedImage(img)}
                     className={`relative w-20 h-20 rounded-xl bg-[#0e0f14] border flex-shrink-0 p-2 overflow-hidden transition-all ${selectedImage === img
-                        ? "border-emerald-400 ring-2 ring-emerald-400/20"
-                        : "border-[#20222a] opacity-70 hover:opacity-100"
+                      ? "border-emerald-400 ring-2 ring-emerald-400/20"
+                      : "border-[#20222a] opacity-70 hover:opacity-100"
                       }`}
                   >
                     <Image
@@ -194,8 +194,8 @@ export default function ProductDetailView({ slug }: { slug: string }) {
                 <button
                   onClick={handleAddToCart}
                   className={`w-full py-4 px-6 rounded-xl font-bold text-xs tracking-wider uppercase flex items-center justify-center gap-2 transition-all shadow-xl min-h-[48px] ${addedAnimation
-                      ? "bg-emerald-500 text-black font-bold"
-                      : "bg-white text-black active:bg-neutral-200 shadow-white/5"
+                    ? "bg-emerald-500 text-black font-bold"
+                    : "bg-white text-black active:bg-neutral-200 shadow-white/5"
                     }`}
                 >
                   <ShoppingBag className="w-4 h-4" />
@@ -217,11 +217,11 @@ export default function ProductDetailView({ slug }: { slug: string }) {
             {/* Assurance Badges */}
             <div className="grid grid-cols-2 gap-3 pt-4 border-t border-[#1c1d22] text-xs text-neutral-400">
               <div className="flex items-center gap-2">
-                <Truck className="w-4 h-4 text-cyan-400 flex-shrink-0" />
+                <Truck className="w-4 h-4 text-emerald-400 flex-shrink-0" />
                 <span>Express Nationwide Dispatch</span>
               </div>
               <div className="flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-cyan-400 flex-shrink-0" />
+                <ShieldCheck className="w-4 h-4 text-emerald-400 flex-shrink-0" />
                 <span>12-Month Official Warranty</span>
               </div>
             </div>
@@ -340,8 +340,8 @@ export default function ProductDetailView({ slug }: { slug: string }) {
             <button
               onClick={handleAddToCart}
               className={`px-4 sm:px-5 py-3 rounded-xl font-bold text-xs tracking-wider uppercase flex items-center gap-1.5 transition-all shadow-lg ${addedAnimation
-                  ? "bg-emerald-500 text-black"
-                  : "bg-white text-black active:bg-neutral-200"
+                ? "bg-emerald-500 text-black"
+                : "bg-white text-black active:bg-neutral-200"
                 }`}
             >
               <ShoppingBag className="w-3.5 h-3.5" />

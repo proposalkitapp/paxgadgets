@@ -11,6 +11,7 @@ import {
   Trash2,
   CheckCircle2,
 } from "lucide-react";
+import { usePathname } from "next/navigation";
 import {
   getStoredEvents,
   clearStoredEvents,
@@ -18,12 +19,24 @@ import {
 } from "@/lib/analytics";
 
 export default function AnalyticsInspector() {
+  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const [isEnabled, setIsEnabled] = useState(false);
   const [events, setEvents] = useState<AnalyticsEventRecord[]>(() =>
     typeof window !== "undefined" ? getStoredEvents() : []
   );
   const [lastEventTime, setLastEventTime] = useState<string | null>(null);
   const [pulse, setPulse] = useState(false);
+
+  useEffect(() => {
+    // Hidden debug panel: only show when ?debug=analytics or #debug is in URL
+    if (typeof window !== "undefined") {
+      const isDebug =
+        window.location.search.includes("debug=analytics") ||
+        window.location.hash.includes("debug");
+      setIsEnabled(isDebug);
+    }
+  }, []);
 
   useEffect(() => {
     // Listen to live events emitted across the window
@@ -40,6 +53,10 @@ export default function AnalyticsInspector() {
     window.addEventListener("pax:analytics", handleLiveEvent);
     return () => window.removeEventListener("pax:analytics", handleLiveEvent);
   }, []);
+
+  if (!isEnabled) {
+    return null;
+  }
 
   const handleClear = () => {
     clearStoredEvents();
@@ -71,6 +88,10 @@ export default function AnalyticsInspector() {
         return "bg-purple-950/70 text-purple-300 border-purple-800/50";
     }
   };
+
+  if (pathname?.startsWith("/admin") || pathname?.startsWith("/distributordelivering")) {
+    return null;
+  }
 
   return (
     <div className="fixed bottom-20 lg:bottom-4 left-4 z-40 max-w-xs sm:max-w-md w-[calc(100vw-2rem)] font-mono select-none">

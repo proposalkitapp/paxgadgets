@@ -39,7 +39,7 @@ const CATEGORY_OPTIONS = [
 ];
 
 export default function AdminProductsPage() {
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<Product[]>(() => getAdminProducts());
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
 
@@ -72,8 +72,6 @@ export default function AdminProductsPage() {
   };
 
   useEffect(() => {
-    loadProducts();
-
     const handleUpdate = () => {
       setProducts(getAdminProducts());
     };

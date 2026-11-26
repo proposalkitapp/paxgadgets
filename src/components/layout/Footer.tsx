@@ -2,12 +2,18 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ArrowRight, ShieldCheck, Truck, Headphones, Check } from "lucide-react";
 import { brandConfig } from "@/config/brand";
 
 export default function Footer() {
+  const pathname = usePathname();
   const [subscribed, setSubscribed] = useState(false);
   const [email, setEmail] = useState("");
+
+  if (pathname?.startsWith("/admin") || pathname?.startsWith("/distributordelivering")) {
+    return null;
+  }
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();

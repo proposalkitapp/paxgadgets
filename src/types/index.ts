@@ -124,6 +124,7 @@ export interface Distributor {
   activeOrdersCount: number;
   completedDeliveries: number;
   joinedDate: string;
+  passcode?: string;
 }
 
 export interface AdminUser {

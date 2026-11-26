@@ -39,9 +39,9 @@ export interface BrandConfig {
 }
 
 export const brandConfig: BrandConfig = {
-  name: "Brand",
-  wordmark: "BRAND",
-  tagline: "Industrial Design & High-Density Tech Gadgets",
+  name: "PAX Gadgets",
+  wordmark: "PAX",
+  tagline: "Industrial Design & High-Density Consumer Tech",
   market: "Nigeria",
   currency: {
     code: "NGN",
@@ -68,13 +68,13 @@ export const brandConfig: BrandConfig = {
       ],
       support: [
         { label: "Contact Us", href: "/contact" },
-        { label: "FAQs", href: "/contact#faqs" },
+        { label: "FAQs & Support", href: "/contact#faqs" },
         { label: "Track Order", href: "/account" },
         { label: "Shipping Policy", href: "/about" },
-        { label: "Returns & Warranty", href: "/about" },
+        { label: "Warranty & Servicing", href: "/about" },
       ],
       company: [
-        { label: "About Brand", href: "/about" },
+        { label: "About PAX", href: "/about" },
         { label: "Design Philosophy", href: "/about" },
       ],
       legal: [
@@ -84,23 +84,23 @@ export const brandConfig: BrandConfig = {
     },
   },
   contact: {
-    email: "support@brand.ng",
-    phone: "+234 800 000 0000",
-    whatsapp: "+234 800 000 0000",
-    address: "Victoria Island, Lagos, Nigeria",
+    email: "support@paxgadgets.ng",
+    phone: "+234 700 729 4234",
+    whatsapp: "+234 812 345 7294",
+    address: "Plot 12, Adeola Odeku Street, Victoria Island, Lagos, Nigeria",
   },
   socials: {
-    twitter: "https://twitter.com",
-    instagram: "https://instagram.com",
-    linkedin: "https://linkedin.com",
+    twitter: "https://x.com/paxgadgets",
+    instagram: "https://instagram.com/paxgadgets",
+    linkedin: "https://linkedin.com/company/paxgadgets",
   },
   hero: {
     headline: "Engineered Hardware. Pure Performance.",
     subheadline:
-      "Precision-milled power banks, spatial earpods, 4K action cameras, and motorized AI gimbals. Built with tactile aerospace alloys and intelligent circuitry for high-intensity creators across Nigeria.",
+      "Precision-milled power banks, spatial acoustics, 4K cameras, and motorized stabilizers. Built with aerospace-grade alloys and intelligent circuitry for high-intensity creators across Nigeria.",
     primaryCta: "Explore Catalogue",
     primaryCtaHref: "/shop",
-    secondaryCta: "Category Architecture",
+    secondaryCta: "Hardware Ecosystem",
     secondaryCtaHref: "/categories",
   },
 };

@@ -28,7 +28,7 @@ import { formatPrice } from "@/lib/utils";
 
 export default function AdminDashboardPage() {
   const [stats, setStats] = useState(() => getDashboardOverviewStats());
-  const [recentOrders, setRecentOrders] = useState<Order[]>([]);
+  const [recentOrders, setRecentOrders] = useState<Order[]>(() => getOrders().slice(0, 6));
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   const loadData = () => {
@@ -40,8 +40,6 @@ export default function AdminDashboardPage() {
   };
 
   useEffect(() => {
-    loadData();
-
     const handleUpdate = () => {
       setStats(getDashboardOverviewStats());
       setRecentOrders(getOrders().slice(0, 6));

@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { brandConfig } from "@/config/brand";
 import { CartProvider } from "@/context/CartContext";
@@ -9,15 +8,8 @@ import Footer from "@/components/layout/Footer";
 import CartDrawer from "@/components/cart/CartDrawer";
 import AnalyticsInspector from "@/components/analytics/AnalyticsInspector";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+const geistSans = { variable: "--font-geist-sans" };
+const geistMono = { variable: "--font-geist-mono" };
 
 export const metadata: Metadata = {
   title: `${brandConfig.name} | High-Performance Consumer Technology`,
@@ -35,7 +27,7 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-[#090a0c] text-neutral-100 font-sans selection:bg-cyan-500/20 selection:text-cyan-300">
+      <body className="min-h-full flex flex-col bg-[#08090a] text-neutral-100 font-sans selection:bg-emerald-500/20 selection:text-emerald-300">
         <CartProvider>
           <Suspense fallback={<div className="h-16" />}>
             <Navbar />

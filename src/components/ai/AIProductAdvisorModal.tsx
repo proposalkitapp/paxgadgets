@@ -34,13 +34,13 @@ interface RecommendationResponse {
 }
 
 const PRESET_PROMPTS = [
-  "⚡ High-capacity power bank approved for aviation & long flights",
-  "🎥 4K action camera with dual touchscreens and rugged stabilization",
-  "📱 3-axis AI motorized smartphone gimbal for smooth cinematic vlogging",
-  "🎧 Premium spatial ANC earpods with smart OLED display case",
-  "⌚ Aerospace titanium smartwatch with clinical ECG & 14-day battery",
-  "🔌 10-in-1 CNC aluminum docking station with dual 4K display outputs",
-  "🔋 140W GaN Pro charger for fast-charging laptop and phone simultaneously",
+  "High-capacity power bank approved for aviation & long flights",
+  "4K action camera with dual touchscreens and rugged stabilization",
+  "3-axis motorized smartphone gimbal for smooth cinematic vlogging",
+  "Premium spatial ANC earpods with smart OLED display case",
+  "Aerospace titanium smartwatch with clinical ECG & 14-day battery",
+  "10-in-1 CNC aluminum docking station with dual 4K display outputs",
+  "140W GaN Pro charger for fast-charging laptop and phone simultaneously",
 ];
 
 export default function AIProductAdvisorModal({
@@ -142,13 +142,13 @@ export default function AIProductAdvisorModal({
               </div>
               <div>
                 <h2 className="text-base font-bold text-white tracking-tight flex items-center gap-2">
-                  AI Hardware Advisor
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-400 border border-emerald-800/60 uppercase">
-                    AI Gateway
+                  PAX Hardware Advisor
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-950/80 text-emerald-400 border border-emerald-800/60 uppercase tracking-widest">
+                    Specification Matcher
                   </span>
                 </h2>
                 <p className="text-xs text-neutral-400">
-                  Describe what you need in plain words, and our model matches our catalog.
+                  Describe your workflow, device requirements, or travel needs for verified hardware matching.
                 </p>
               </div>
             </div>
@@ -329,11 +329,10 @@ export default function AIProductAdvisorModal({
                             {isAvailable ? (
                               <button
                                 onClick={() => handleAddToCart(product)}
-                                className={`px-4 py-2 rounded-xl text-xs font-semibold uppercase tracking-wider flex items-center gap-1.5 transition-all ${
-                                  isAdded
+                                className={`px-4 py-2 rounded-xl text-xs font-semibold uppercase tracking-wider flex items-center gap-1.5 transition-all ${isAdded
                                     ? "bg-emerald-500 text-black font-bold"
                                     : "bg-white text-black hover:bg-neutral-200"
-                                }`}
+                                  }`}
                               >
                                 <ShoppingBag className="w-3.5 h-3.5" />
                                 {isAdded ? "Added!" : "Add to Bag"}
