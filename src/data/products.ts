@@ -500,9 +500,9 @@ export const products: Product[] = [
     availabilityStatus: "Available",
     stockQuantity: 25,
     featured: false,
-    heroImage: "https://images.unsplash.com/photo-1512790182412-b19e6d62bc39?auto=format&fit=crop&w=1000&q=80",
+    heroImage: "https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=1000&q=80",
     images: [
-      "https://images.unsplash.com/photo-1512790182412-b19e6d62bc39?auto=format&fit=crop&w=1000&q=80",
+      "https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=1000&q=80",
     ],
     specifications: [
       { label: "Payload Capacity", value: "3.2kg Tested Rig Capacity" },
