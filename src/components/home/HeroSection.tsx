@@ -1,82 +1,179 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Zap, Shield, BatteryCharging } from "lucide-react";
-import { brandConfig } from "@/config/brand";
-import PowerBank3DViewer from "@/components/hero/PowerBank3DViewer";
+import { ArrowRight, ShoppingBag, Check, ShieldCheck, Zap } from "lucide-react";
+import { products } from "@/data/products";
+import { useCart } from "@/context/CartContext";
+import { formatPrice } from "@/lib/utils";
+
+const studioViews = [
+  {
+    src: "/assets/products/powerbank-hero.png",
+    label: "Chassis",
+  },
+  {
+    src: "/assets/products/photo_2026-11-19_19-28-10.jpg",
+    label: "Ergonomics",
+  },
+  {
+    src: "/assets/products/photo_2026-11-19_19-28-14.jpg",
+    label: "Dual Ports",
+  },
+  {
+    src: "/assets/products/photo_2026-11-19_19-28-17.jpg",
+    label: "LED Meter",
+  },
+  {
+    src: "/assets/products/photo_2026-11-19_19-28-21.jpg",
+    label: "Carbon Weave",
+  },
+  {
+    src: "/assets/products/photo_2026-11-19_19-28-00.jpg",
+    label: "Profile",
+  },
+];
 
 export default function HeroSection() {
-  return (
-    <section className="relative min-h-[88vh] sm:min-h-[92vh] flex items-center justify-center pt-20 sm:pt-24 pb-12 sm:pb-16 overflow-hidden studio-radial-bg">
-      {/* Studio Lighting Accents */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[550px] bg-gradient-to-b from-neutral-800/10 via-neutral-900/5 to-transparent blur-[160px] pointer-events-none rounded-full" />
-      <div className="absolute bottom-16 right-1/4 w-[350px] h-[350px] bg-emerald-950/10 blur-[130px] pointer-events-none rounded-full" />
+  const { addToCart } = useCart();
+  const primaryProduct = products[0];
+  const [activeImage, setActiveImage] = useState(studioViews[0].src);
+  const [added, setAdded] = useState(false);
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-8 items-center">
-          {/* Left Column: Story & Hero Copy */}
-          <div className="lg:col-span-6 space-y-5 sm:space-y-6 text-center lg:text-left">
-            {/* Signature Status Pill */}
-            <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-[#111216] border border-[#20222a] text-xs font-mono text-neutral-300">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_10px_#00e676] animate-pulse" />
-              <span>ACTIVE RELEASE • POWER BANK</span>
+  const handleQuickAdd = () => {
+    if (!primaryProduct) return;
+    addToCart(primaryProduct, 1);
+    setAdded(true);
+    setTimeout(() => setAdded(false), 2200);
+  };
+
+  return (
+    <section className="relative pt-28 sm:pt-36 pb-16 sm:pb-24 border-b border-neutral-200/80 bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+          {/* Left Column: Minimalist Typography & Purchase Action */}
+          <div className="lg:col-span-6 space-y-6 text-left">
+            {/* Minimalist Model Pill */}
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-neutral-100 border border-neutral-200 text-xs font-mono text-neutral-600">
+              <span className="w-1.5 h-1.5 rounded-full bg-neutral-900" />
+              <span>PAX HARDWARE • MODEL PB-01</span>
             </div>
 
             {/* Headline */}
-            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white leading-[1.08] sm:leading-[1.06]">
-              Power, <span className="text-transparent bg-clip-text bg-gradient-to-b from-white via-neutral-200 to-neutral-500">distilled.</span>
-            </h1>
+            <div className="space-y-1">
+              <h1 className="text-4xl sm:text-6xl font-black tracking-tight text-neutral-950 leading-[1.04]">
+                Power, distilled.
+              </h1>
+              <p className="text-base sm:text-lg text-neutral-600 font-normal leading-relaxed pt-2 max-w-lg">
+                Engineered for intense daily demands. High-density energy storage, bi-directional 22.5W fast charging, and real-time digital metering in a precision-milled matte charcoal chassis.
+              </p>
+            </div>
 
-            {/* Supporting Copy */}
-            <p className="text-sm sm:text-lg text-neutral-400 leading-relaxed max-w-xl mx-auto lg:mx-0 font-light">
-              {brandConfig.hero.subheadline}
-            </p>
-
-            {/* Industrial Specs Trio */}
-            <div className="grid grid-cols-3 gap-2 sm:gap-3 pt-2 pb-2 max-w-md mx-auto lg:mx-0 text-left">
-              <div className="p-2.5 sm:p-3.5 rounded-xl bg-[#0f1013] border border-[#1c1d22]">
-                <BatteryCharging className="w-4 h-4 text-emerald-400 mb-1" />
-                <div className="text-[11px] sm:text-xs font-semibold text-neutral-200 truncate">High-Density</div>
-                <div className="text-[9px] sm:text-[10px] text-neutral-500 font-mono truncate">Li-Polymer Core</div>
+            {/* Industrial Spec Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-2">
+              <div className="p-3.5 rounded-xl bg-neutral-50 border border-neutral-200/80">
+                <div className="text-[10px] font-mono text-neutral-500 uppercase">Input / Output</div>
+                <div className="text-sm font-semibold text-neutral-900 mt-0.5">22.5W PD Fast</div>
               </div>
-              <div className="p-2.5 sm:p-3.5 rounded-xl bg-[#0f1013] border border-[#1c1d22]">
-                <Zap className="w-4 h-4 text-emerald-400 mb-1" />
-                <div className="text-[11px] sm:text-xs font-semibold text-neutral-200 truncate">Dual Fast</div>
-                <div className="text-[9px] sm:text-[10px] text-neutral-500 font-mono truncate">Bi-Directional</div>
+              <div className="p-3.5 rounded-xl bg-neutral-50 border border-neutral-200/80">
+                <div className="text-[10px] font-mono text-neutral-500 uppercase">Display</div>
+                <div className="text-sm font-semibold text-neutral-900 mt-0.5">LED Level Gauge</div>
               </div>
-              <div className="p-2.5 sm:p-3.5 rounded-xl bg-[#0f1013] border border-[#1c1d22]">
-                <Shield className="w-4 h-4 text-emerald-400 mb-1" />
-                <div className="text-[11px] sm:text-xs font-semibold text-neutral-200 truncate">Aviation Safe</div>
-                <div className="text-[9px] sm:text-[10px] text-neutral-500 font-mono truncate">Multi-Thermal</div>
+              <div className="p-3.5 rounded-xl bg-neutral-50 border border-neutral-200/80 col-span-2 sm:col-span-1">
+                <div className="text-[10px] font-mono text-neutral-500 uppercase">Compliance</div>
+                <div className="text-sm font-semibold text-neutral-900 mt-0.5">Aviation UN38.3</div>
               </div>
             </div>
 
-            {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 sm:gap-3.5 pt-2">
-              <Link
-                href={brandConfig.hero.primaryCtaHref}
-                className="w-full sm:w-auto px-7 py-4 sm:py-3.5 rounded-xl bg-white text-black hover:bg-neutral-200 font-semibold text-xs tracking-wider uppercase flex items-center justify-center gap-2 transition-all shadow-xl shadow-white/5 min-h-[48px]"
-              >
-                {brandConfig.hero.primaryCta}
-                <ArrowRight className="w-4 h-4" />
-              </Link>
+            {/* Pricing & Primary CTA */}
+            <div className="pt-3 space-y-3">
+              <div className="flex items-baseline gap-3">
+                <span className="text-3xl font-black text-neutral-950 font-mono tracking-tight">
+                  {formatPrice(primaryProduct.price)}
+                </span>
+                <span className="text-sm font-mono text-neutral-400 line-through">
+                  {formatPrice(primaryProduct.originalPrice || 38000)}
+                </span>
+                <span className="text-xs font-mono font-medium text-neutral-600 bg-neutral-100 px-2 py-0.5 rounded">
+                  In Stock
+                </span>
+              </div>
 
-              <Link
-                href={brandConfig.hero.secondaryCtaHref}
-                className="w-full sm:w-auto px-7 py-4 sm:py-3.5 rounded-xl bg-[#121317] hover:bg-[#1a1b22] border border-[#22242c] text-neutral-300 font-medium text-xs tracking-wider uppercase flex items-center justify-center transition-colors min-h-[48px]"
-              >
-                {brandConfig.hero.secondaryCta}
-              </Link>
+              <div className="flex flex-col sm:flex-row gap-3 pt-1">
+                <button
+                  onClick={handleQuickAdd}
+                  className="px-8 py-3.5 rounded-xl bg-neutral-950 text-white hover:bg-neutral-800 font-semibold text-xs tracking-wider uppercase flex items-center justify-center gap-2.5 transition-all shadow-sm min-h-[48px]"
+                >
+                  {added ? (
+                    <>
+                      <Check className="w-4 h-4 text-emerald-400" />
+                      <span>Added to Bag</span>
+                    </>
+                  ) : (
+                    <>
+                      <ShoppingBag className="w-4 h-4" />
+                      <span>Add to Bag</span>
+                    </>
+                  )}
+                </button>
+
+                <Link
+                  href="/shop"
+                  className="px-6 py-3.5 rounded-xl bg-neutral-100 hover:bg-neutral-200 border border-neutral-200 text-neutral-800 font-semibold text-xs tracking-wider uppercase flex items-center justify-center gap-2 transition-colors min-h-[48px]"
+                >
+                  <span>Catalogue Details</span>
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </div>
+
+              <div className="flex items-center gap-4 text-xs font-mono text-neutral-500 pt-1">
+                <span className="flex items-center gap-1.5">
+                  <ShieldCheck className="w-3.5 h-3.5 text-neutral-700" />
+                  12-Month Official Warranty
+                </span>
+                <span>•</span>
+                <span>Express 24-48hr Lagos & Nationwide Dispatch</span>
+              </div>
             </div>
           </div>
 
-          {/* Right Column: Signature 3D Floating Power Bank */}
-          <div className="lg:col-span-6 flex justify-center">
-            <PowerBank3DViewer
-              fallbackImage="/assets/products/powerbank-hero.png"
-              className="w-full"
-            />
+          {/* Right Column: Clean Hardware Studio Showcase (Using only pb_images) */}
+          <div className="lg:col-span-6 flex flex-col items-center">
+            <div className="relative w-full aspect-square max-w-[480px] rounded-3xl bg-neutral-50 border border-neutral-200/90 flex items-center justify-center p-8 overflow-hidden shadow-sm">
+              <Image
+                src={activeImage}
+                alt="PAX Portable Power Bank hardware engineering"
+                fill
+                priority
+                sizes="(max-width: 768px) 100vw, 480px"
+                className="object-contain p-6 filter drop-shadow-[0_16px_24px_rgba(0,0,0,0.12)] transition-all duration-300"
+              />
+            </div>
+
+            {/* Interactive Hardware View Strip (Exclusively pb_images) */}
+            <div className="flex items-center justify-center gap-2 mt-4 overflow-x-auto p-1 max-w-full">
+              {studioViews.map((view, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setActiveImage(view.src)}
+                  className={`relative w-14 h-14 rounded-xl bg-white border p-1 transition-all flex-shrink-0 ${
+                    activeImage === view.src
+                      ? "border-neutral-950 ring-2 ring-neutral-950/10 scale-105"
+                      : "border-neutral-200 opacity-60 hover:opacity-100"
+                  }`}
+                  aria-label={`View ${view.label}`}
+                >
+                  <Image
+                    src={view.src}
+                    alt={view.label}
+                    fill
+                    sizes="56px"
+                    className="object-contain p-0.5 rounded-lg"
+                  />
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>

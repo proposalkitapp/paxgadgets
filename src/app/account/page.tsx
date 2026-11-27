@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { User, Package, MapPin, LogOut, Clock, Truck } from "lucide-react";
+import { User, Package, MapPin, Clock, Truck } from "lucide-react";
 import { formatPrice } from "@/lib/utils";
 import { getOrders } from "@/lib/adminStore";
 import { Order } from "@/types";
@@ -49,7 +49,6 @@ export default function AccountPage() {
         }
       }
 
-      // Filter orders for current logged-in customer or default user
       const customerOrders = allOrders.filter(
         (o) =>
           o.customer.email.toLowerCase() === currentEmail ||
@@ -75,24 +74,24 @@ export default function AccountPage() {
     : "PX";
 
   return (
-    <div className="pt-28 pb-20 bg-[#08090b] min-h-screen text-neutral-100">
+    <div className="pt-28 pb-20 bg-[#fafafa] min-h-screen text-neutral-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <span className="text-xs font-mono uppercase tracking-widest text-emerald-400">
+            <span className="text-xs font-mono uppercase tracking-widest text-neutral-500">
               Customer Portal
             </span>
-            <h1 className="text-3xl font-black tracking-tight text-white mt-1">
+            <h1 className="text-3xl font-black tracking-tight text-neutral-900 mt-1">
               My Account
             </h1>
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-emerald-950/80 border border-emerald-800/60 text-emerald-400 flex items-center justify-center font-bold font-mono text-sm">
+            <div className="w-10 h-10 rounded-full bg-neutral-900 text-white flex items-center justify-center font-bold font-mono text-sm shadow-sm">
               {initials}
             </div>
             <div>
-              <div className="text-sm font-semibold text-white">{customerProfile.fullName}</div>
+              <div className="text-sm font-semibold text-neutral-900">{customerProfile.fullName}</div>
               <div className="text-xs text-neutral-500 font-mono">{customerProfile.email}</div>
             </div>
           </div>
@@ -103,10 +102,11 @@ export default function AccountPage() {
           <div className="lg:col-span-3 space-y-1">
             <button
               onClick={() => setActiveTab("orders")}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold tracking-wide transition-colors ${activeTab === "orders"
-                  ? "bg-white text-black"
-                  : "bg-[#0e0f14] text-neutral-400 hover:text-white border border-[#1f2128]"
-                }`}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold tracking-wide transition-colors ${
+                activeTab === "orders"
+                  ? "bg-neutral-900 text-white shadow-sm"
+                  : "bg-white text-neutral-600 hover:text-neutral-900 border border-neutral-200"
+              }`}
             >
               <Package className="w-4 h-4" />
               Order History
@@ -114,91 +114,97 @@ export default function AccountPage() {
 
             <button
               onClick={() => setActiveTab("addresses")}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold tracking-wide transition-colors ${activeTab === "addresses"
-                  ? "bg-white text-black"
-                  : "bg-[#0e0f14] text-neutral-400 hover:text-white border border-[#1f2128]"
-                }`}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold tracking-wide transition-colors ${
+                activeTab === "addresses"
+                  ? "bg-neutral-900 text-white shadow-sm"
+                  : "bg-white text-neutral-600 hover:text-neutral-900 border border-neutral-200"
+              }`}
             >
               <MapPin className="w-4 h-4" />
-              Saved Addresses
+              Addresses & Destination
             </button>
 
             <button
               onClick={() => setActiveTab("profile")}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold tracking-wide transition-colors ${activeTab === "profile"
-                  ? "bg-white text-black"
-                  : "bg-[#0e0f14] text-neutral-400 hover:text-white border border-[#1f2128]"
-                }`}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold tracking-wide transition-colors ${
+                activeTab === "profile"
+                  ? "bg-neutral-900 text-white shadow-sm"
+                  : "bg-white text-neutral-600 hover:text-neutral-900 border border-neutral-200"
+              }`}
             >
               <User className="w-4 h-4" />
               Profile Details
             </button>
-
-            <Link
-              href="/"
-              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold text-neutral-500 hover:text-red-400 transition-colors pt-4"
-            >
-              <LogOut className="w-4 h-4" />
-              Sign Out
-            </Link>
           </div>
 
-          {/* Tab Content Panel */}
+          {/* Active Tab Content Area */}
           <div className="lg:col-span-9">
             {activeTab === "orders" && (
               <div className="space-y-4">
-                <h2 className="text-base font-bold text-white mb-2">Order History</h2>
+                <div className="flex items-center justify-between pb-3 border-b border-neutral-200">
+                  <h2 className="text-base font-bold text-neutral-900">
+                    Recent Hardware Orders ({userOrders.length})
+                  </h2>
+                  <Link
+                    href="/shop"
+                    className="text-xs font-mono text-neutral-900 hover:underline font-semibold"
+                  >
+                    Browse Catalogue &rarr;
+                  </Link>
+                </div>
 
                 {userOrders.length === 0 ? (
-                  <div className="p-8 rounded-2xl bg-[#0e0f14] border border-[#1f2128] text-center text-neutral-500 font-mono text-xs">
-                    No orders placed yet.
+                  <div className="p-12 rounded-2xl bg-white border border-neutral-200 text-center space-y-3 shadow-sm">
+                    <Package className="w-8 h-8 text-neutral-400 mx-auto" />
+                    <p className="text-sm font-semibold text-neutral-900">No Orders Found</p>
+                    <p className="text-xs text-neutral-500">
+                      You haven&apos;t placed any orders yet with this account.
+                    </p>
+                    <Link
+                      href="/shop"
+                      className="inline-block mt-2 px-5 py-2.5 rounded-xl bg-neutral-900 text-white text-xs font-semibold uppercase tracking-wider hover:bg-neutral-800 transition-colors shadow-sm"
+                    >
+                      Explore Products
+                    </Link>
                   </div>
                 ) : (
-                  userOrders.map((order) => (
+                  userOrders.map((ord) => (
                     <div
-                      key={order.id}
-                      className="p-6 rounded-2xl bg-[#0e0f14] border border-[#1f2128] space-y-4"
+                      key={ord.id}
+                      className="p-6 rounded-2xl bg-white border border-neutral-200/90 space-y-4 shadow-sm"
                     >
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-[#181920] pb-4 gap-2 text-xs">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-neutral-100 text-xs font-mono">
                         <div>
-                          <span className="text-neutral-500 font-mono">Reference: </span>
-                          <span className="font-mono font-bold text-white">{order.id}</span>
+                          <span className="text-neutral-500">Order Ref: </span>
+                          <span className="text-neutral-900 font-bold">{ord.id}</span>
                         </div>
                         <div className="flex items-center gap-3">
-                          <span className="px-2.5 py-0.5 rounded text-[11px] font-mono font-semibold bg-emerald-950/60 text-emerald-400 border border-emerald-800/40">
-                            {order.paymentStatus}
+                          <span className="text-neutral-500">
+                            {new Date(ord.createdAt).toLocaleDateString()}
                           </span>
-                          <span className="px-2.5 py-0.5 rounded text-[11px] font-mono font-semibold bg-emerald-950/60 text-emerald-400 border border-emerald-800/40 flex items-center gap-1">
-                            <Clock className="w-3 h-3" />
-                            {order.status}
+                          <span className="px-2.5 py-0.5 rounded text-[11px] font-semibold bg-neutral-100 text-neutral-900 border border-neutral-200">
+                            {ord.status}
                           </span>
                         </div>
                       </div>
 
                       <div className="space-y-2">
-                        {order.items.map((item, idx) => (
-                          <div key={idx} className="flex justify-between text-xs">
-                            <span className="text-neutral-200">
+                        {ord.items.map((item, idx) => (
+                          <div key={idx} className="flex justify-between items-center text-xs">
+                            <span className="text-neutral-900 font-medium">
                               {item.quantity}x {item.name}
                             </span>
-                            <span className="font-mono text-neutral-400">
+                            <span className="font-mono text-neutral-600">
                               {formatPrice(item.price * item.quantity)}
                             </span>
                           </div>
                         ))}
                       </div>
 
-                      {order.assignedDistributorName && (
-                        <div className="text-[11px] font-mono text-emerald-400/90 flex items-center gap-1.5 pt-1">
-                          <Truck className="w-3.5 h-3.5 text-emerald-400" />
-                          <span>Dispatched via: {order.assignedDistributorName}</span>
-                        </div>
-                      )}
-
-                      <div className="pt-3 border-t border-[#181920] flex items-center justify-between text-xs font-mono">
-                        <span className="text-neutral-500">Total Charged</span>
-                        <span className="text-sm font-bold text-emerald-400">
-                          {formatPrice(order.totalAmount)}
+                      <div className="pt-3 border-t border-neutral-100 flex justify-between items-center text-xs font-mono">
+                        <span className="text-neutral-500">Total Paid</span>
+                        <span className="text-sm font-bold text-neutral-900">
+                          {formatPrice(ord.totalAmount)}
                         </span>
                       </div>
                     </div>
@@ -208,34 +214,47 @@ export default function AccountPage() {
             )}
 
             {activeTab === "addresses" && (
-              <div className="space-y-4">
-                <h2 className="text-base font-bold text-white mb-2">Primary Delivery Address</h2>
-                <div className="p-6 rounded-2xl bg-[#0e0f14] border border-[#1f2128] text-xs space-y-2">
-                  <div className="font-semibold text-white text-sm">{customerProfile.fullName}</div>
-                  <div className="text-neutral-400">
-                    {customerProfile.address}, {customerProfile.city}, {customerProfile.state} State, Nigeria
-                  </div>
-                  <div className="text-neutral-500 font-mono">{customerProfile.phone}</div>
-                  <div className="pt-3">
-                    <span className="text-[10px] font-mono uppercase bg-emerald-950/60 text-emerald-400 border border-emerald-800/40 px-2 py-0.5 rounded">
-                      Default Delivery Location
-                    </span>
-                  </div>
+              <div className="p-8 rounded-2xl bg-white border border-neutral-200/90 shadow-sm space-y-6">
+                <h2 className="text-base font-bold text-neutral-900">Default Delivery Address</h2>
+                <div className="p-5 rounded-xl bg-neutral-50 border border-neutral-200 space-y-2 text-xs">
+                  <div className="font-bold text-neutral-900">{customerProfile.fullName}</div>
+                  <div className="text-neutral-600">{customerProfile.address}</div>
+                  <div className="text-neutral-600">{customerProfile.city}, {customerProfile.state}</div>
+                  <div className="text-neutral-500 font-mono pt-1">{customerProfile.phone}</div>
                 </div>
               </div>
             )}
 
             {activeTab === "profile" && (
-              <div className="p-6 rounded-2xl bg-[#0e0f14] border border-[#1f2128] space-y-4 text-xs">
-                <h2 className="text-base font-bold text-white mb-2">Personal Credentials</h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="p-8 rounded-2xl bg-white border border-neutral-200/90 shadow-sm space-y-6">
+                <h2 className="text-base font-bold text-neutral-900">Customer Profile</h2>
+                <div className="space-y-4 text-xs">
                   <div>
-                    <label className="text-neutral-500 font-mono block mb-1">Full Name</label>
-                    <div className="p-3 rounded-lg bg-[#121318] text-white border border-[#1c1d24]">{customerProfile.fullName}</div>
+                    <label className="block text-neutral-500 font-mono mb-1">Full Name</label>
+                    <input
+                      type="text"
+                      readOnly
+                      value={customerProfile.fullName}
+                      className="w-full bg-neutral-50 border border-neutral-200 text-neutral-900 px-3.5 py-2.5 rounded-xl"
+                    />
                   </div>
                   <div>
-                    <label className="text-neutral-500 font-mono block mb-1">Authenticated Email</label>
-                    <div className="p-3 rounded-lg bg-[#121318] text-white border border-[#1c1d24]">{customerProfile.email}</div>
+                    <label className="block text-neutral-500 font-mono mb-1">Email Address</label>
+                    <input
+                      type="email"
+                      readOnly
+                      value={customerProfile.email}
+                      className="w-full bg-neutral-50 border border-neutral-200 text-neutral-900 px-3.5 py-2.5 rounded-xl"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-neutral-500 font-mono mb-1">Phone Number</label>
+                    <input
+                      type="tel"
+                      readOnly
+                      value={customerProfile.phone}
+                      className="w-full bg-neutral-50 border border-neutral-200 text-neutral-900 px-3.5 py-2.5 rounded-xl"
+                    />
                   </div>
                 </div>
               </div>

@@ -1,16 +1,15 @@
 @import "tailwindcss";
 
 :root {
-  --background: #08090a;
-  --foreground: #f3f3f4;
-  --surface-panel: #0e0f12;
-  --surface-elevated: #141518;
-  --surface-highlight: #1a1b20;
-  --border-muted: #1c1d22;
-  --border-subtle: #16171b;
-  --accent-emerald: #00e676;
-  --accent-mint: #10b981;
-  --accent-glow: rgba(0, 230, 118, 0.25);
+  --background: #fafafa;
+  --foreground: #111417;
+  --surface-panel: #ffffff;
+  --surface-elevated: #f4f5f7;
+  --surface-highlight: #ebecee;
+  --border-muted: #e5e7eb;
+  --border-subtle: #f0f1f3;
+  --accent-primary: #111417;
+  --accent-contrast: #ffffff;
 }
 
 @theme inline {
@@ -21,8 +20,6 @@
   --color-surface-highlight: var(--surface-highlight);
   --color-border-muted: var(--border-muted);
   --color-border-subtle: var(--border-subtle);
-  --color-accent-emerald: var(--accent-emerald);
-  --color-accent-mint: var(--accent-mint);
 }
 
 body {
@@ -33,51 +30,46 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Custom subtle scrollbar */
+/* Custom minimal scrollbar */
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #08090a;
+  background: #fafafa;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1c1d22;
+  background: #d1d5db;
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #2a2b33;
+  background: #9ca3af;
 }
 
-/* Studio lighting radial gradient */
-.studio-radial-bg {
-  background: radial-gradient(circle at 50% 45%, #18191e 0%, #0c0d10 55%, #060708 100%);
+/* Minimalist studio lighting and surface styling */
+.studio-canvas {
+  background: radial-gradient(circle at 50% 30%, #ffffff 0%, #f7f8fa 70%, #f0f2f5 100%);
 }
 
-.studio-card-bg {
-  background: radial-gradient(circle at 50% 20%, #15161b 0%, #0d0e11 100%);
+.minimal-panel {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.03), 0 1px 2px -1px rgba(0, 0, 0, 0.03);
 }
 
-/* Satin glass panel */
-.satin-panel {
-  background: rgba(14, 15, 18, 0.72);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+.minimal-card-hover {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.subtle-border {
-  border: 1px solid #1c1d22;
+.minimal-card-hover:hover {
+  border-color: #d1d5db;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px -6px rgba(0, 0, 0, 0.06), 0 4px 8px -2px rgba(0, 0, 0, 0.02);
 }
 
-.subtle-border-hover:hover {
-  border-color: #2c2d36;
-}
-
-/* Floating shadow effect */
-.product-contact-shadow {
-  box-shadow: 0 45px 75px -15px rgba(0, 0, 0, 0.95), 0 0 35px -5px rgba(0, 230, 118, 0.08);
+.product-shadow {
+  filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.12));
 }

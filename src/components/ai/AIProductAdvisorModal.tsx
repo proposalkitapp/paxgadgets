@@ -35,12 +35,10 @@ interface RecommendationResponse {
 
 const PRESET_PROMPTS = [
   "High-capacity power bank approved for aviation & long flights",
-  "4K action camera with dual touchscreens and rugged stabilization",
-  "3-axis motorized smartphone gimbal for smooth cinematic vlogging",
-  "Premium spatial ANC earpods with smart OLED display case",
-  "Aerospace titanium smartwatch with clinical ECG & 14-day battery",
-  "10-in-1 CNC aluminum docking station with dual 4K display outputs",
-  "140W GaN Pro charger for fast-charging laptop and phone simultaneously",
+  "Dual power bank creator rig for cameras and smartphones",
+  "Fast charging battery with real-time metered LED display",
+  "Rugged field power bank with reinforced impact bumpers",
+  "Compact daily commuter power bank with dual fast-charge ports",
 ];
 
 export default function AIProductAdvisorModal({
@@ -122,40 +120,34 @@ export default function AIProductAdvisorModal({
     >
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black/80 backdrop-blur-md transition-opacity"
+        className="fixed inset-0 bg-neutral-900/40 backdrop-blur-sm transition-opacity"
         onClick={onClose}
       />
 
       <div className="min-h-full flex items-center justify-center p-4 sm:p-6">
-        <div className="relative w-full max-w-3xl rounded-3xl bg-[#0c0d12] border border-[#242633] text-neutral-100 shadow-2xl overflow-hidden my-8">
-          {/* Ambient Glow */}
-          <div className="absolute top-0 right-1/4 w-80 h-80 bg-emerald-500/10 rounded-full blur-[100px] pointer-events-none" />
-          <div className="absolute top-0 left-1/4 w-60 h-60 bg-cyan-500/10 rounded-full blur-[90px] pointer-events-none" />
-
+        <div className="relative w-full max-w-3xl rounded-3xl bg-white border border-neutral-200 text-neutral-900 shadow-2xl overflow-hidden my-8">
           {/* Modal Header */}
-          <div className="relative px-6 py-5 border-b border-[#1b1c24] flex items-center justify-between">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-emerald-500 to-cyan-400 p-0.5 flex items-center justify-center">
-                <div className="w-full h-full bg-[#0c0d12] rounded-[10px] flex items-center justify-center text-emerald-400">
-                  <Sparkles className="w-4 h-4" />
-                </div>
+          <div className="relative px-6 py-5 border-b border-neutral-100 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-xl bg-neutral-900 text-white flex items-center justify-center shadow-sm">
+                <Sparkles className="w-4 h-4" />
               </div>
               <div>
-                <h2 className="text-base font-bold text-white tracking-tight flex items-center gap-2">
+                <h2 className="text-base font-bold text-neutral-900 tracking-tight flex items-center gap-2">
                   PAX Hardware Advisor
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-950/80 text-emerald-400 border border-emerald-800/60 uppercase tracking-widest">
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-neutral-100 text-neutral-700 border border-neutral-200 uppercase tracking-widest">
                     Specification Matcher
                   </span>
                 </h2>
-                <p className="text-xs text-neutral-400">
-                  Describe your workflow, device requirements, or travel needs for verified hardware matching.
+                <p className="text-xs text-neutral-500">
+                  Describe your device requirements or travel conditions for direct hardware matching.
                 </p>
               </div>
             </div>
 
             <button
               onClick={onClose}
-              className="p-1.5 rounded-lg text-neutral-400 hover:text-white hover:bg-[#181922] transition-colors"
+              className="p-1.5 rounded-lg text-neutral-400 hover:text-neutral-900 hover:bg-neutral-100 transition-colors"
               aria-label="Close modal"
             >
               <X className="w-5 h-5" />
@@ -176,14 +168,14 @@ export default function AIProductAdvisorModal({
                 <textarea
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="e.g. 'I commute daily on noisy buses and need comfortable headphones that block engine noise and last all week without charging...'"
+                  placeholder="e.g. 'I shoot videos on the field with my phone and need reliable multi-charge battery power...'"
                   rows={3}
-                  className="w-full bg-[#11131a] border border-[#232532] text-base sm:text-sm text-neutral-200 placeholder-neutral-500 p-3.5 sm:p-4 rounded-2xl focus:outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400/30 transition-all resize-none"
+                  className="w-full bg-neutral-50 border border-neutral-200 text-base sm:text-sm text-neutral-900 placeholder-neutral-400 p-3.5 sm:p-4 rounded-2xl focus:outline-none focus:border-neutral-900 transition-all resize-none"
                 />
                 <button
                   type="submit"
                   disabled={loading || !query.trim()}
-                  className="absolute bottom-3 right-3 px-4 py-2 rounded-xl bg-white text-black hover:bg-neutral-200 disabled:opacity-40 font-semibold text-xs tracking-wider uppercase flex items-center gap-2 transition-all shadow-md"
+                  className="absolute bottom-3 right-3 px-4 py-2 rounded-xl bg-neutral-900 text-white hover:bg-neutral-800 disabled:opacity-40 font-semibold text-xs tracking-wider uppercase flex items-center gap-2 transition-all shadow-sm"
                 >
                   {loading ? (
                     <>
@@ -201,7 +193,7 @@ export default function AIProductAdvisorModal({
 
               {/* Inspiration Prompt Pills */}
               <div className="space-y-1.5">
-                <div className="text-[11px] font-mono text-neutral-400">
+                <div className="text-[11px] font-mono text-neutral-500">
                   Quick prompt ideas:
                 </div>
                 <div className="flex flex-wrap gap-2">
@@ -213,7 +205,7 @@ export default function AIProductAdvisorModal({
                         setQuery(prompt);
                         handleSubmit(prompt);
                       }}
-                      className="px-3 py-1.5 rounded-lg text-xs bg-[#12141c] border border-[#20222e] text-neutral-300 hover:text-white hover:border-[#333647] transition-colors text-left"
+                      className="px-3 py-1.5 rounded-lg text-xs bg-neutral-100 border border-neutral-200 text-neutral-700 hover:text-neutral-900 hover:border-neutral-400 transition-colors text-left"
                     >
                       {prompt}
                     </button>
@@ -225,14 +217,14 @@ export default function AIProductAdvisorModal({
             {/* Loading State */}
             {loading && (
               <div className="py-12 text-center space-y-3">
-                <div className="w-12 h-12 rounded-2xl bg-emerald-950/60 border border-emerald-800/60 text-emerald-400 flex items-center justify-center mx-auto animate-pulse">
-                  <Cpu className="w-6 h-6 animate-spin text-emerald-400" />
+                <div className="w-12 h-12 rounded-2xl bg-neutral-100 border border-neutral-200 text-neutral-900 flex items-center justify-center mx-auto animate-pulse">
+                  <Cpu className="w-6 h-6 animate-spin text-neutral-900" />
                 </div>
-                <div className="text-sm font-semibold text-white">
+                <div className="text-sm font-semibold text-neutral-900">
                   Consulting Model & Catalog Schematics...
                 </div>
-                <p className="text-xs text-neutral-400 max-w-sm mx-auto">
-                  Evaluating thermal ratings, acoustic architecture, wattage requirements, and stock availability across our inventory.
+                <p className="text-xs text-neutral-500 max-w-sm mx-auto">
+                  Evaluating cell density, port configurations, and stock availability across our inventory.
                 </p>
               </div>
             )}
@@ -241,24 +233,24 @@ export default function AIProductAdvisorModal({
             {result && !loading && (
               <div className="space-y-5 pt-2">
                 {/* Advisor Recommendation Summary Banner */}
-                <div className="p-4 sm:p-5 rounded-2xl bg-[#101218] border border-[#1f212c] space-y-2">
+                <div className="p-4 sm:p-5 rounded-2xl bg-neutral-50 border border-neutral-200 space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-[11px] font-mono uppercase tracking-widest text-emerald-400 flex items-center gap-1.5">
+                    <span className="text-[11px] font-mono uppercase tracking-widest text-neutral-900 font-semibold flex items-center gap-1.5">
                       <Sparkles className="w-3.5 h-3.5" />
                       {result.headline}
                     </span>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#161822] text-neutral-400 border border-[#252735]">
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white text-neutral-600 border border-neutral-200">
                       {result.source === "ai-gateway" ? "AI Gateway Live" : "Catalog Engine"}
                     </span>
                   </div>
-                  <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed font-light">
+                  <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed font-light">
                     {result.explanation}
                   </p>
                 </div>
 
                 {/* Recommended Product Cards */}
                 <div className="space-y-3">
-                  <div className="text-xs font-mono font-semibold text-neutral-400 uppercase tracking-wider">
+                  <div className="text-xs font-mono font-semibold text-neutral-500 uppercase tracking-wider">
                     Recommended Hardware ({result.recommendations.length})
                   </div>
 
@@ -272,23 +264,23 @@ export default function AIProductAdvisorModal({
                       return (
                         <div
                           key={rec.productId}
-                          className="rounded-2xl bg-[#0f1117] border border-[#1e202b] hover:border-[#2f3242] p-4 flex flex-col justify-between transition-all"
+                          className="rounded-2xl bg-white border border-neutral-200 hover:border-neutral-900 p-4 flex flex-col justify-between transition-all shadow-sm"
                         >
                           <div>
                             {/* Card Top: Match Score & Category */}
                             <div className="flex items-center justify-between mb-3">
-                              <span className="text-[10px] font-mono uppercase tracking-wider text-neutral-400">
+                              <span className="text-[10px] font-mono uppercase tracking-wider text-neutral-500">
                                 {product.category}
                               </span>
-                              <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-950/80 text-emerald-400 border border-emerald-800/60 flex items-center gap-1">
-                                <CheckCircle2 className="w-3 h-3" />
+                              <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-neutral-100 text-neutral-900 border border-neutral-200 flex items-center gap-1">
+                                <CheckCircle2 className="w-3 h-3 text-emerald-600" />
                                 {rec.matchScore}% Match
                               </span>
                             </div>
 
                             {/* Product Visual & Name */}
                             <div className="flex gap-3.5 items-center mb-3">
-                              <div className="relative w-16 h-16 rounded-xl bg-[#0a0a0c] border border-[#1b1d24] flex-shrink-0 overflow-hidden flex items-center justify-center p-1">
+                              <div className="relative w-16 h-16 rounded-xl bg-neutral-50 border border-neutral-200 flex-shrink-0 overflow-hidden flex items-center justify-center p-1">
                                 <Image
                                   src={product.heroImage}
                                   alt={product.name}
@@ -298,18 +290,18 @@ export default function AIProductAdvisorModal({
                                 />
                               </div>
                               <div className="flex-1 min-w-0">
-                                <h4 className="text-sm font-bold text-white truncate">
+                                <h4 className="text-sm font-bold text-neutral-900 truncate">
                                   {product.name}
                                 </h4>
-                                <div className="text-xs font-mono font-semibold text-emerald-400 mt-0.5">
+                                <div className="text-xs font-mono font-semibold text-neutral-900 mt-0.5">
                                   {isAvailable ? formatPrice(product.price) : "Coming Soon"}
                                 </div>
                               </div>
                             </div>
 
                             {/* Why it matches */}
-                            <div className="p-3 rounded-xl bg-[#0a0b0f] border border-[#191b24] text-[11px] text-neutral-300 leading-relaxed mb-3">
-                              <span className="text-emerald-400 font-semibold block mb-0.5 font-mono text-[10px] uppercase">
+                            <div className="p-3 rounded-xl bg-neutral-50 border border-neutral-100 text-[11px] text-neutral-600 leading-relaxed mb-3">
+                              <span className="text-neutral-900 font-semibold block mb-0.5 font-mono text-[10px] uppercase">
                                 Why This Matches You
                               </span>
                               {rec.matchReason}
@@ -317,11 +309,11 @@ export default function AIProductAdvisorModal({
                           </div>
 
                           {/* Action Buttons */}
-                          <div className="pt-2 border-t border-[#191b24] flex items-center justify-between gap-2">
+                          <div className="pt-2 border-t border-neutral-100 flex items-center justify-between gap-2">
                             <Link
                               href={`/products/${product.slug}`}
                               onClick={onClose}
-                              className="px-3 py-2 rounded-xl bg-[#14161f] border border-[#232532] text-neutral-300 hover:text-white text-xs font-medium transition-colors"
+                              className="px-3 py-2 rounded-xl bg-neutral-50 border border-neutral-200 text-neutral-700 hover:text-neutral-900 text-xs font-medium transition-colors"
                             >
                               View Specs
                             </Link>
@@ -329,17 +321,18 @@ export default function AIProductAdvisorModal({
                             {isAvailable ? (
                               <button
                                 onClick={() => handleAddToCart(product)}
-                                className={`px-4 py-2 rounded-xl text-xs font-semibold uppercase tracking-wider flex items-center gap-1.5 transition-all ${isAdded
-                                    ? "bg-emerald-500 text-black font-bold"
-                                    : "bg-white text-black hover:bg-neutral-200"
-                                  }`}
+                                className={`px-4 py-2 rounded-xl text-xs font-semibold uppercase tracking-wider flex items-center gap-1.5 transition-all ${
+                                  isAdded
+                                    ? "bg-emerald-600 text-white"
+                                    : "bg-neutral-900 text-white hover:bg-neutral-800"
+                                }`}
                               >
                                 <ShoppingBag className="w-3.5 h-3.5" />
                                 {isAdded ? "Added!" : "Add to Bag"}
                               </button>
                             ) : (
                               <span className="text-[11px] font-mono text-neutral-500">
-                                Prototype R&D
+                                Coming Soon
                               </span>
                             )}
                           </div>
@@ -351,8 +344,8 @@ export default function AIProductAdvisorModal({
 
                 {/* Follow-up Prompts */}
                 {result.suggestedFollowUps?.length > 0 && (
-                  <div className="pt-3 border-t border-[#1b1c24] space-y-2">
-                    <span className="text-[11px] font-mono text-neutral-400">
+                  <div className="pt-3 border-t border-neutral-100 space-y-2">
+                    <span className="text-[11px] font-mono text-neutral-500">
                       Explore related questions:
                     </span>
                     <div className="flex flex-wrap gap-2">
@@ -363,7 +356,7 @@ export default function AIProductAdvisorModal({
                             setQuery(fu);
                             handleSubmit(fu);
                           }}
-                          className="px-3 py-1 rounded-lg text-xs bg-[#12141c] border border-[#20222d] text-neutral-300 hover:text-white transition-colors"
+                          className="px-3 py-1 rounded-lg text-xs bg-neutral-100 border border-neutral-200 text-neutral-700 hover:text-neutral-900 transition-colors"
                         >
                           {fu}
                         </button>

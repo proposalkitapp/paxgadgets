@@ -1,176 +1,181 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
 import Image from "next/image";
-import { ShoppingBag, ArrowRight, ShieldCheck, Zap } from "lucide-react";
+import Link from "next/link";
+import { ShoppingBag, Check, ArrowRight, ShieldCheck, Zap, BatteryCharging, Cpu } from "lucide-react";
 import { products } from "@/data/products";
 import { formatPrice } from "@/lib/utils";
 import { useCart } from "@/context/CartContext";
 
+const hardwareHighlights = [
+  {
+    title: "Precision LED Power Meter",
+    desc: "Real-time visual percentage gauge eliminates battery guessing during travel and shoots.",
+    image: "/assets/products/photo_2026-11-19_19-28-17.jpg",
+    metric: "Instant Readout",
+  },
+  {
+    title: "Dual Fast-Charge Hub",
+    desc: "Bi-directional USB-C (22.5W / PD) + high-output USB-A for simultaneous multi-device powering.",
+    image: "/assets/products/photo_2026-11-19_19-28-14.jpg",
+    metric: "22.5W Output",
+  },
+  {
+    title: "Ergonomic Handheld Unibody",
+    desc: "Aerospace-inspired curved palm contours designed for effortless grip and daily mobility.",
+    image: "/assets/products/photo_2026-11-19_19-28-10.jpg",
+    metric: "Handheld Form",
+  },
+  {
+    title: "Matte Carbon Composite",
+    desc: "Tactile scratch-resistant textured chassis engineered to withstand keys, drops, and heat.",
+    image: "/assets/products/photo_2026-11-19_19-28-21.jpg",
+    metric: "Thermal Dissipation",
+  },
+];
+
 export default function FeaturedProductSection() {
   const { addToCart } = useCart();
-  const featuredProduct = products.find((p) => p.featured && p.availabilityStatus === "Available");
-
-  const [activeImage, setActiveImage] = useState(
-    featuredProduct ? featuredProduct.heroImage : "/assets/products/powerbank-hero.png"
-  );
-  const [addedAnim, setAddedAnim] = useState(false);
-
-  if (!featuredProduct) return null;
+  const mainProduct = products[0];
+  const [activeView, setActiveView] = useState("/assets/products/photo_2026-11-19_19-28-17.jpg");
+  const [added, setAdded] = useState(false);
 
   const handleAdd = () => {
-    addToCart(featuredProduct);
-    setAddedAnim(true);
-    setTimeout(() => setAddedAnim(false), 2000);
+    if (!mainProduct) return;
+    addToCart(mainProduct, 1);
+    setAdded(true);
+    setTimeout(() => setAdded(false), 2000);
   };
 
   return (
-    <section className="py-16 sm:py-24 bg-[#08090a] border-t border-[#141518]">
+    <section className="py-20 sm:py-28 bg-[#fafafa] border-b border-neutral-200/80">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 sm:mb-12">
-          <div>
-            <div className="inline-flex items-center gap-1.5 text-xs font-mono uppercase tracking-widest text-emerald-400 mb-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_#00e676]" />
-              Flagship Showcase
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
-              Tactile Carbon Architecture
-            </h2>
-          </div>
-          <p className="text-xs sm:text-sm text-neutral-400 max-w-sm mt-2 md:mt-0 font-light leading-relaxed">
-            Milled carbon-weave faceplate with integrated digital metering and dual bi-directional fast ports.
+        {/* Section Header */}
+        <div className="max-w-3xl mb-14 text-left">
+          <span className="text-xs font-mono uppercase tracking-widest text-neutral-500">
+            Hardware Engineering
+          </span>
+          <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-neutral-950 mt-1">
+            Built for tangible endurance.
+          </h2>
+          <p className="text-base text-neutral-600 mt-3 font-normal leading-relaxed">
+            Every component is purpose-built. From CNC port alignment to internal alloy thermal dissipation, explore the physical anatomy of the PAX power architecture.
           </p>
         </div>
 
-        {/* Featured Product Card with Soft Studio Lighting */}
-        <div className="rounded-3xl bg-gradient-to-b from-[#111216] to-[#0c0d10] border border-[#1e2027] p-5 sm:p-10 relative overflow-hidden shadow-2xl">
-          {/* Subtle Ambient Radial Highlight */}
-          <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-96 h-96 bg-emerald-950/15 blur-[120px] pointer-events-none" />
-
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-            {/* Visual Image Presentation & Studio Thumbnail Strip */}
-            <div className="lg:col-span-6 space-y-4">
-              <div className="relative w-full aspect-square max-w-[440px] mx-auto rounded-2xl bg-[#090a0d] border border-[#1b1c24] flex items-center justify-center p-4 overflow-hidden">
-                <Image
-                  src={activeImage}
-                  alt={featuredProduct.name}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 440px"
-                  className="object-contain p-4 filter drop-shadow-[0_20px_50px_rgba(0,0,0,0.9)] transition-all duration-300"
-                />
-              </div>
-
-              {/* Hardware Photo Selector from pb_images */}
-              <div className="flex items-center justify-center gap-2 overflow-x-auto py-2 px-1">
-                {featuredProduct.images.map((img, idx) => (
-                  <button
-                    key={idx}
-                    type="button"
-                    onClick={() => setActiveImage(img)}
-                    className={`relative w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-[#0e0f14] border flex-shrink-0 p-1.5 transition-all ${
-                      activeImage === img
-                        ? "border-emerald-400 ring-2 ring-emerald-400/20 scale-105"
-                        : "border-[#1e2028] opacity-65 hover:opacity-100"
-                    }`}
-                    aria-label={`Select product image view ${idx + 1}`}
-                  >
-                    <Image
-                      src={img}
-                      alt={`Hardware view ${idx + 1}`}
-                      fill
-                      sizes="64px"
-                      className="object-contain p-1"
-                    />
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Product Details & Purchase Trigger */}
-            <div className="lg:col-span-6 space-y-5 sm:space-y-6">
-              <div className="flex items-center gap-2.5">
-                <span className="px-3 py-1 rounded-full text-[11px] font-mono font-semibold uppercase bg-emerald-950/70 text-emerald-400 border border-emerald-800/50 flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                  {featuredProduct.availabilityStatus}
-                </span>
-                <span className="text-xs text-neutral-500 font-mono">
-                  SKU: PB-CH-01
-                </span>
-              </div>
-
+        {/* 4 Architecture Pillars Grid using exclusively pb_images */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+          {hardwareHighlights.map((item, idx) => (
+            <div
+              key={idx}
+              onClick={() => setActiveView(item.image)}
+              className={`group cursor-pointer rounded-2xl bg-white border p-5 flex flex-col justify-between transition-all ${
+                activeView === item.image
+                  ? "border-neutral-900 shadow-md ring-1 ring-neutral-900/10"
+                  : "border-neutral-200/80 hover:border-neutral-400"
+              }`}
+            >
               <div>
-                <h3 className="text-xl sm:text-3xl font-bold text-white tracking-tight">
-                  {featuredProduct.name}
+                <div className="relative w-full aspect-[4/3] rounded-xl bg-neutral-100 overflow-hidden mb-4 border border-neutral-100">
+                  <Image
+                    src={item.image}
+                    alt={item.title}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 300px"
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute top-2.5 right-2.5">
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-neutral-950/80 text-white font-medium">
+                      {item.metric}
+                    </span>
+                  </div>
+                </div>
+                <h3 className="text-base font-bold text-neutral-900 tracking-tight">
+                  {item.title}
                 </h3>
-                <p className="text-xs sm:text-sm text-neutral-400 mt-2.5 leading-relaxed font-light">
-                  {featuredProduct.shortDescription}
+                <p className="text-xs text-neutral-600 mt-1.5 leading-relaxed font-normal">
+                  {item.desc}
                 </p>
               </div>
 
-              {/* Price Display */}
-              <div className="flex items-baseline gap-3">
-                <span className="text-2xl sm:text-3xl font-mono font-black text-white">
-                  {formatPrice(featuredProduct.price)}
-                </span>
-                {featuredProduct.originalPrice && (
-                  <span className="text-sm font-mono text-neutral-500 line-through">
-                    {formatPrice(featuredProduct.originalPrice)}
-                  </span>
-                )}
-                <span className="text-xs font-mono text-emerald-400 ml-1">
-                  Save 15%
-                </span>
+              <div className="pt-4 mt-4 border-t border-neutral-100 flex items-center justify-between text-xs font-mono text-neutral-500">
+                <span>Proof #{idx + 1}</span>
+                <span className="text-neutral-900 font-semibold group-hover:underline">Inspect</span>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Large Detailed Hardware Spec Banner */}
+        <div className="rounded-3xl bg-white border border-neutral-200 p-8 sm:p-12 shadow-sm">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            <div className="lg:col-span-6 space-y-4">
+              <span className="text-xs font-mono uppercase tracking-widest text-neutral-500">
+                Verified Lab Specifications
+              </span>
+              <h3 className="text-2xl sm:text-3xl font-black tracking-tight text-neutral-950">
+                10-Layer Protection. Aviation Certified.
+              </h3>
+              <p className="text-sm text-neutral-600 leading-relaxed">
+                Tested against voltage spikes, short-circuits, and thermal shifts. Safe for aircraft carry-on baggage worldwide under IATA UN38.3 protocols.
+              </p>
+
+              <div className="grid grid-cols-2 gap-3 pt-2 text-xs font-mono text-neutral-700">
+                <div className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-neutral-900" />
+                  <span>Over-charge Cutoff</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-neutral-900" />
+                  <span>Dual Port Pass-Through</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-neutral-900" />
+                  <span>Short-Circuit Lock</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-neutral-900" />
+                  <span>Flame-Retardant Alloy</span>
+                </div>
               </div>
 
-              {/* Key Specs Pills */}
-              <div className="space-y-2.5 pt-2 border-t border-[#1a1b22]">
-                <div className="text-xs font-semibold uppercase tracking-wider text-neutral-300">
-                  Engineering Overview
-                </div>
-                <div className="grid grid-cols-2 gap-2 text-xs">
-                  {featuredProduct.specifications.slice(0, 4).map((spec) => (
-                    <div key={spec.label} className="p-2.5 sm:p-3 rounded-xl bg-[#0e0f13] border border-[#1b1c22]">
-                      <div className="text-neutral-500 text-[10px] uppercase font-mono">{spec.label}</div>
-                      <div className="text-neutral-200 font-medium truncate mt-0.5">{spec.value}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* CTAs */}
-              <div className="flex flex-col sm:flex-row items-center gap-3 pt-2">
+              <div className="pt-4 flex items-center gap-4">
                 <button
                   onClick={handleAdd}
-                  className={`w-full sm:flex-1 py-4 sm:py-3.5 px-6 rounded-xl font-semibold text-xs tracking-wider uppercase flex items-center justify-center gap-2 transition-all shadow-lg ${
-                    addedAnim
-                      ? "bg-emerald-500 text-black font-bold"
-                      : "bg-white text-black hover:bg-neutral-200 shadow-white/5"
-                  }`}
+                  className="px-6 py-3 rounded-xl bg-neutral-950 text-white hover:bg-neutral-800 text-xs font-semibold uppercase tracking-wider flex items-center gap-2 transition-colors min-h-[44px]"
                 >
-                  <ShoppingBag className="w-4 h-4" />
-                  {addedAnim ? "Added to Bag!" : "Add to Bag"}
+                  {added ? (
+                    <>
+                      <Check className="w-4 h-4 text-emerald-400" />
+                      <span>Added to Bag</span>
+                    </>
+                  ) : (
+                    <>
+                      <ShoppingBag className="w-4 h-4" />
+                      <span>Buy Flagship — ₦32,500</span>
+                    </>
+                  )}
                 </button>
-
                 <Link
-                  href={`/products/${featuredProduct.slug}`}
-                  className="w-full sm:w-auto py-4 sm:py-3.5 px-6 rounded-xl bg-[#121317] hover:bg-[#1a1b22] border border-[#22242c] text-neutral-200 font-medium text-xs tracking-wider uppercase flex items-center justify-center gap-1.5 transition-colors"
+                  href="/shop"
+                  className="text-xs font-mono text-neutral-600 hover:text-neutral-950 flex items-center gap-1"
                 >
-                  View Specifications
+                  <span>All Kits</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
               </div>
+            </div>
 
-              {/* Delivery & Warranty */}
-              <div className="pt-2 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6 text-[11px] text-neutral-500 font-mono">
-                <span className="flex items-center gap-1.5">
-                  <Zap className="w-3.5 h-3.5 text-emerald-400" />
-                  Express 24-48hr Nationwide Dispatch
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-                  12-Month Official Warranty
-                </span>
+            <div className="lg:col-span-6 flex justify-center">
+              <div className="relative w-full aspect-square max-w-[420px] rounded-2xl bg-neutral-50 border border-neutral-100 flex items-center justify-center p-6 overflow-hidden">
+                <Image
+                  src={activeView}
+                  alt="PAX Hardware Close-up View"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 420px"
+                  className="object-contain p-4 filter drop-shadow-md transition-all duration-300"
+                />
               </div>
             </div>
           </div>

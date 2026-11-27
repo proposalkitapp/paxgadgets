@@ -64,15 +64,10 @@ export default function CheckoutPage() {
     }
   }, [cart, totalItems, subtotal]);
 
-  // Checkout flow state
-  // Step 1: Google Authentication Gate (PRD §7.2)
-  // Step 2: Delivery Details
-  // Step 3: Payment & Order Confirmation
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userProfile, setUserProfile] = useState<{ name: string; email: string } | null>(null);
   const [isAuthenticating, setIsAuthenticating] = useState(false);
 
-  // Delivery form state
   const [deliveryData, setDeliveryData] = useState({
     fullName: "",
     email: "",
@@ -92,7 +87,6 @@ export default function CheckoutPage() {
   const deliveryFee = deliveryData.state === "Lagos" ? 2500 : 4500;
   const orderTotal = subtotal + (subtotal > 0 ? deliveryFee : 0);
 
-  // Initialize customer profile from local storage if previously entered
   useEffect(() => {
     if (typeof window !== "undefined") {
       const savedProfile = localStorage.getItem("pax_customer_profile");
@@ -122,7 +116,6 @@ export default function CheckoutPage() {
     }
   }, []);
 
-  // Customer authentication / express verification
   const handleGoogleAuth = () => {
     setIsAuthenticating(true);
     setTimeout(() => {
@@ -162,7 +155,6 @@ export default function CheckoutPage() {
       const generatedOrderId = `ORD-${Date.now().toString().slice(-8)}`;
       setOrderId(generatedOrderId);
 
-      // Save customer details into local storage for account sync
       if (typeof window !== "undefined") {
         try {
           localStorage.setItem(
@@ -181,7 +173,6 @@ export default function CheckoutPage() {
         }
       }
 
-      // Save order into the central administrative order repository
       createOrder({
         id: generatedOrderId,
         customer: {
@@ -217,18 +208,18 @@ export default function CheckoutPage() {
 
   if (cart.length === 0 && !orderConfirmed) {
     return (
-      <div className="pt-32 pb-20 bg-[#090a0d] min-h-screen flex items-center justify-center">
+      <div className="pt-32 pb-20 bg-[#fafafa] min-h-screen flex items-center justify-center text-neutral-900">
         <div className="max-w-md mx-auto text-center px-4">
-          <div className="w-16 h-16 rounded-full bg-[#13141a] border border-[#22242c] flex items-center justify-center mx-auto mb-4 text-neutral-500">
+          <div className="w-16 h-16 rounded-full bg-white border border-neutral-200 flex items-center justify-center mx-auto mb-4 text-neutral-400 shadow-sm">
             <ShoppingBag className="w-8 h-8" />
           </div>
-          <h2 className="text-xl font-bold text-white mb-2">Your Bag is Empty</h2>
-          <p className="text-xs text-neutral-400 mb-6">
+          <h2 className="text-xl font-bold text-neutral-900 mb-2">Your Bag is Empty</h2>
+          <p className="text-xs text-neutral-500 mb-6">
             You must have at least one product in your bag before proceeding with checkout.
           </p>
           <Link
             href="/shop"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white text-black font-semibold text-xs tracking-wider uppercase hover:bg-neutral-200 transition-colors"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-neutral-900 text-white font-semibold text-xs tracking-wider uppercase hover:bg-neutral-800 transition-colors shadow-sm"
           >
             Explore Catalogue
           </Link>
@@ -239,52 +230,52 @@ export default function CheckoutPage() {
 
   if (orderConfirmed) {
     return (
-      <div className="pt-32 pb-20 bg-[#090a0d] min-h-screen flex items-center justify-center">
+      <div className="pt-32 pb-20 bg-[#fafafa] min-h-screen flex items-center justify-center text-neutral-900">
         <div className="max-w-lg mx-auto px-4 text-center space-y-6">
-          <div className="w-20 h-20 rounded-full bg-emerald-950/60 border border-emerald-800/60 text-emerald-400 flex items-center justify-center mx-auto">
+          <div className="w-20 h-20 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center mx-auto shadow-sm">
             <Check className="w-10 h-10" />
           </div>
 
           <div>
-            <span className="text-xs font-mono uppercase tracking-widest text-emerald-400">
+            <span className="text-xs font-mono uppercase tracking-widest text-neutral-500">
               Order Confirmed & Paid
             </span>
-            <h1 className="text-3xl font-black text-white mt-1">Thank You For Your Order!</h1>
-            <p className="text-xs text-neutral-400 mt-2">
+            <h1 className="text-3xl font-black text-neutral-900 mt-1">Thank You For Your Order!</h1>
+            <p className="text-xs text-neutral-600 mt-2">
               A confirmation receipt and fulfillment timeline have been dispatched to{" "}
-              <span className="text-white font-mono">{deliveryData.email}</span>.
+              <span className="text-neutral-900 font-mono font-medium">{deliveryData.email}</span>.
             </p>
           </div>
 
-          <div className="p-6 rounded-2xl bg-[#0e0f14] border border-[#1f2128] text-left space-y-3 font-mono text-xs">
-            <div className="flex justify-between border-b border-[#1c1d22] pb-2">
+          <div className="p-6 rounded-2xl bg-white border border-neutral-200/90 text-left space-y-3 font-mono text-xs shadow-sm">
+            <div className="flex justify-between border-b border-neutral-100 pb-2">
               <span className="text-neutral-500">Order Reference</span>
-              <span className="text-emerald-400 font-bold">{orderId}</span>
+              <span className="text-neutral-900 font-bold">{orderId}</span>
             </div>
-            <div className="flex justify-between border-b border-[#1c1d22] pb-2">
+            <div className="flex justify-between border-b border-neutral-100 pb-2">
               <span className="text-neutral-500">Customer</span>
-              <span className="text-neutral-200">{deliveryData.fullName}</span>
+              <span className="text-neutral-900">{deliveryData.fullName}</span>
             </div>
-            <div className="flex justify-between border-b border-[#1c1d22] pb-2">
+            <div className="flex justify-between border-b border-neutral-100 pb-2">
               <span className="text-neutral-500">Destination</span>
-              <span className="text-neutral-200">{deliveryData.city}, {deliveryData.state}</span>
+              <span className="text-neutral-900">{deliveryData.city}, {deliveryData.state}</span>
             </div>
             <div className="flex justify-between pt-1">
               <span className="text-neutral-500">Total Paid</span>
-              <span className="text-white font-bold">{formatPrice(confirmedOrderSummary.amountPaid || orderTotal)}</span>
+              <span className="text-neutral-900 font-bold">{formatPrice(confirmedOrderSummary.amountPaid || orderTotal)}</span>
             </div>
           </div>
 
           <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
               href="/"
-              className="w-full sm:w-auto px-6 py-3 rounded-xl bg-white text-black text-xs font-semibold uppercase tracking-wider hover:bg-neutral-200 transition-colors"
+              className="w-full sm:w-auto px-6 py-3 rounded-xl bg-neutral-900 text-white text-xs font-semibold uppercase tracking-wider hover:bg-neutral-800 transition-colors shadow-sm"
             >
               Return to Storefront
             </Link>
             <Link
               href="/account"
-              className="w-full sm:w-auto px-6 py-3 rounded-xl bg-[#14161c] border border-[#23252f] text-neutral-300 text-xs font-medium uppercase tracking-wider hover:bg-[#1e2028] transition-colors"
+              className="w-full sm:w-auto px-6 py-3 rounded-xl bg-white border border-neutral-200 text-neutral-700 text-xs font-medium uppercase tracking-wider hover:border-neutral-900 transition-colors shadow-sm"
             >
               View Order History
             </Link>
@@ -295,20 +286,20 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="pt-28 pb-20 bg-[#090a0d] min-h-screen">
+    <div className="pt-28 pb-20 bg-[#fafafa] min-h-screen text-neutral-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
           <Link
             href="/shop"
-            className="inline-flex items-center gap-1.5 text-xs text-neutral-500 hover:text-white font-mono mb-3"
+            className="inline-flex items-center gap-1.5 text-xs text-neutral-500 hover:text-neutral-900 font-mono mb-3"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             Back to catalogue
           </Link>
-          <h1 className="text-3xl font-black tracking-tight text-white">
+          <h1 className="text-3xl font-black tracking-tight text-neutral-900">
             Secure Checkout
           </h1>
-          <p className="text-xs text-neutral-400 mt-1">
+          <p className="text-xs text-neutral-500 mt-1">
             Official Nigerian payment verification via encrypted gateway.
           </p>
         </div>
@@ -316,19 +307,20 @@ export default function CheckoutPage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
           {/* Main Checkout Steps Column */}
           <div className="lg:col-span-7 space-y-6">
-            {/* Step 1: Shopping-First Google Authentication (PRD §7.2) */}
-            <div className="p-6 sm:p-8 rounded-2xl bg-[#0e0f14] border border-[#1f2128]">
+            {/* Step 1: Customer Authentication */}
+            <div className="p-6 sm:p-8 rounded-2xl bg-white border border-neutral-200/90 shadow-sm">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
                   <div
-                    className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-mono font-bold ${isAuthenticated
-                      ? "bg-emerald-950 text-emerald-400 border border-emerald-800"
-                      : "bg-emerald-950/80 text-emerald-400 border border-emerald-800/60"
-                      }`}
+                    className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-mono font-bold ${
+                      isAuthenticated
+                        ? "bg-neutral-900 text-white"
+                        : "bg-neutral-100 text-neutral-900 border border-neutral-200"
+                    }`}
                   >
                     {isAuthenticated ? <Check className="w-3.5 h-3.5" /> : "1"}
                   </div>
-                  <h2 className="text-base font-bold text-white">
+                  <h2 className="text-base font-bold text-neutral-900">
                     Customer Authentication
                   </h2>
                 </div>
@@ -336,7 +328,7 @@ export default function CheckoutPage() {
                 {isAuthenticated && (
                   <button
                     onClick={() => setIsAuthenticated(false)}
-                    className="text-[11px] font-mono text-neutral-500 hover:text-emerald-400"
+                    className="text-[11px] font-mono text-neutral-500 hover:text-neutral-900 underline"
                   >
                     Switch Account
                   </button>
@@ -345,11 +337,11 @@ export default function CheckoutPage() {
 
               {!isAuthenticated ? (
                 <div className="space-y-4 pt-2">
-                  <div className="p-5 rounded-xl bg-[#0a0b0e] border border-[#1b1c22]">
-                    <h3 className="text-base font-bold text-white mb-1">
+                  <div className="p-5 rounded-xl bg-neutral-50 border border-neutral-200">
+                    <h3 className="text-base font-bold text-neutral-900 mb-1">
                       Almost there. Let&apos;s get your order ready.
                     </h3>
-                    <p className="text-xs text-neutral-400 leading-relaxed mb-5">
+                    <p className="text-xs text-neutral-600 leading-relaxed mb-5">
                       Sign in with Google to continue securely and manage your purchases. Your guest cart will be automatically preserved.
                     </p>
 
@@ -357,9 +349,8 @@ export default function CheckoutPage() {
                       <button
                         onClick={handleGoogleAuth}
                         disabled={isAuthenticating}
-                        className="w-full py-3.5 px-4 rounded-xl bg-white text-black hover:bg-neutral-200 font-semibold text-xs tracking-wider uppercase flex items-center justify-center gap-3 transition-colors shadow-lg shadow-white/5"
+                        className="w-full py-3.5 px-4 rounded-xl bg-white border border-neutral-200 text-neutral-900 hover:bg-neutral-100 font-semibold text-xs tracking-wider uppercase flex items-center justify-center gap-3 transition-colors shadow-sm"
                       >
-                        {/* Google G Icon */}
                         <svg className="w-4 h-4" viewBox="0 0 24 24">
                           <path
                             fill="#4285F4"
@@ -382,15 +373,15 @@ export default function CheckoutPage() {
                       </button>
 
                       <div className="flex items-center gap-3 my-2">
-                        <div className="h-px flex-1 bg-[#1e2029]" />
-                        <span className="text-[10px] font-mono uppercase text-neutral-500">or</span>
-                        <div className="h-px flex-1 bg-[#1e2029]" />
+                        <div className="h-px flex-1 bg-neutral-200" />
+                        <span className="text-[10px] font-mono uppercase text-neutral-400">or</span>
+                        <div className="h-px flex-1 bg-neutral-200" />
                       </div>
 
                       <button
                         type="button"
                         onClick={handleGuestCheckout}
-                        className="w-full py-3 px-4 rounded-xl bg-[#14151c] hover:bg-[#1a1b24] border border-[#232532] text-neutral-300 font-medium text-xs tracking-wider uppercase transition-colors"
+                        className="w-full py-3 px-4 rounded-xl bg-neutral-100 hover:bg-neutral-200 border border-neutral-200 text-neutral-700 font-medium text-xs tracking-wider uppercase transition-colors"
                       >
                         Continue as Guest
                       </button>
@@ -398,18 +389,18 @@ export default function CheckoutPage() {
                   </div>
 
                   <div className="flex items-center gap-2 text-[11px] text-neutral-500 font-mono">
-                    <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                    <ShieldCheck className="w-4 h-4 text-neutral-900" />
                     <span>Cart preservation active: No items will be lost during authentication</span>
                   </div>
                 </div>
               ) : (
-                <div className="p-3.5 rounded-xl bg-[#12141a] border border-[#1f2128] flex items-center justify-between text-xs">
+                <div className="p-3.5 rounded-xl bg-neutral-50 border border-neutral-200 flex items-center justify-between text-xs">
                   <div>
-                    <div className="text-neutral-400 font-mono">Customer:</div>
-                    <div className="text-white font-semibold mt-0.5">{userProfile?.name} ({userProfile?.email})</div>
+                    <div className="text-neutral-500 font-mono">Customer:</div>
+                    <div className="text-neutral-900 font-semibold mt-0.5">{userProfile?.name} ({userProfile?.email})</div>
                   </div>
-                  <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-800/40">
-                    Active
+                  <span className="text-[10px] font-mono text-neutral-900 bg-neutral-200 px-2 py-0.5 rounded font-semibold">
+                    Verified
                   </span>
                 </div>
               )}
@@ -417,55 +408,57 @@ export default function CheckoutPage() {
 
             {/* Step 2: Delivery Information */}
             <div
-              className={`p-6 sm:p-8 rounded-2xl bg-[#0e0f14] border transition-opacity ${isAuthenticated ? "border-[#1f2128]" : "border-[#16171d] opacity-50 pointer-events-none"
-                }`}
+              className={`p-6 sm:p-8 rounded-2xl bg-white border shadow-sm transition-opacity ${
+                isAuthenticated ? "border-neutral-200/90" : "border-neutral-200 opacity-50 pointer-events-none"
+              }`}
             >
               <div className="flex items-center gap-3 mb-6">
                 <div
-                  className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-mono font-bold ${deliveryConfirmed
-                    ? "bg-emerald-950 text-emerald-400 border border-emerald-800"
-                    : "bg-[#181a24] text-neutral-300 border border-[#292c3a]"
-                    }`}
+                  className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-mono font-bold ${
+                    deliveryConfirmed
+                      ? "bg-neutral-900 text-white"
+                      : "bg-neutral-100 text-neutral-900 border border-neutral-200"
+                  }`}
                 >
                   {deliveryConfirmed ? <Check className="w-3.5 h-3.5" /> : "2"}
                 </div>
-                <h2 className="text-base font-bold text-white">Delivery Address</h2>
+                <h2 className="text-base font-bold text-neutral-900">Delivery Address</h2>
               </div>
 
               {!deliveryConfirmed ? (
                 <div className="space-y-4 text-xs">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label htmlFor="delivery-fullName" className="block text-neutral-400 font-mono mb-1.5">Full Name *</label>
+                      <label htmlFor="delivery-fullName" className="block text-neutral-600 font-medium mb-1.5">Full Name *</label>
                       <input
                         id="delivery-fullName"
                         type="text"
                         value={deliveryData.fullName}
                         onChange={(e) => setDeliveryData({ ...deliveryData, fullName: e.target.value })}
-                        className="w-full bg-[#13141a] border border-[#232530] text-neutral-200 px-3.5 py-3 sm:py-2.5 text-base sm:text-xs rounded-xl focus:outline-none focus:border-cyan-400"
+                        className="w-full bg-white border border-neutral-200 text-neutral-900 px-3.5 py-3 sm:py-2.5 text-base sm:text-xs rounded-xl focus:outline-none focus:border-neutral-900 transition-colors"
                       />
                     </div>
                     <div>
-                      <label htmlFor="delivery-phone" className="block text-neutral-400 font-mono mb-1.5">Phone Number *</label>
+                      <label htmlFor="delivery-phone" className="block text-neutral-600 font-medium mb-1.5">Phone Number *</label>
                       <input
                         id="delivery-phone"
                         type="tel"
                         value={deliveryData.phone}
                         onChange={(e) => setDeliveryData({ ...deliveryData, phone: e.target.value })}
                         placeholder="+234 800 000 0000"
-                        className="w-full bg-[#13141a] border border-[#232530] text-neutral-200 px-3.5 py-3 sm:py-2.5 text-base sm:text-xs rounded-xl focus:outline-none focus:border-cyan-400"
+                        className="w-full bg-white border border-neutral-200 text-neutral-900 px-3.5 py-3 sm:py-2.5 text-base sm:text-xs rounded-xl focus:outline-none focus:border-neutral-900 transition-colors"
                       />
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label htmlFor="delivery-state" className="block text-neutral-400 font-mono mb-1.5">State *</label>
+                      <label htmlFor="delivery-state" className="block text-neutral-600 font-medium mb-1.5">State *</label>
                       <select
                         id="delivery-state"
                         value={deliveryData.state}
                         onChange={(e) => setDeliveryData({ ...deliveryData, state: e.target.value })}
-                        className="w-full bg-[#13141a] border border-[#232530] text-neutral-200 px-3.5 py-3 sm:py-2.5 text-base sm:text-xs rounded-xl focus:outline-none focus:border-cyan-400"
+                        className="w-full bg-white border border-neutral-200 text-neutral-900 px-3.5 py-3 sm:py-2.5 text-base sm:text-xs rounded-xl focus:outline-none focus:border-neutral-900 transition-colors"
                       >
                         {NIGERIAN_STATES.map((st) => (
                           <option key={st} value={st}>
@@ -475,27 +468,27 @@ export default function CheckoutPage() {
                       </select>
                     </div>
                     <div>
-                      <label htmlFor="delivery-city" className="block text-neutral-400 font-mono mb-1.5">City / Town *</label>
+                      <label htmlFor="delivery-city" className="block text-neutral-600 font-medium mb-1.5">City / Town *</label>
                       <input
                         id="delivery-city"
                         type="text"
                         value={deliveryData.city}
                         onChange={(e) => setDeliveryData({ ...deliveryData, city: e.target.value })}
                         placeholder="e.g. Ikeja, Lekki, Victoria Island"
-                        className="w-full bg-[#13141a] border border-[#232530] text-neutral-200 px-3.5 py-3 sm:py-2.5 text-base sm:text-xs rounded-xl focus:outline-none focus:border-cyan-400"
+                        className="w-full bg-white border border-neutral-200 text-neutral-900 px-3.5 py-3 sm:py-2.5 text-base sm:text-xs rounded-xl focus:outline-none focus:border-neutral-900 transition-colors"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label htmlFor="delivery-address" className="block text-neutral-400 font-mono mb-1.5">Street Address *</label>
+                    <label htmlFor="delivery-address" className="block text-neutral-600 font-medium mb-1.5">Street Address *</label>
                     <input
                       id="delivery-address"
                       type="text"
                       value={deliveryData.address}
                       onChange={(e) => setDeliveryData({ ...deliveryData, address: e.target.value })}
                       placeholder="Street name, building number, landmark"
-                      className="w-full bg-[#13141a] border border-[#232530] text-neutral-200 px-3.5 py-3 sm:py-2.5 text-base sm:text-xs rounded-xl focus:outline-none focus:border-cyan-400"
+                      className="w-full bg-white border border-neutral-200 text-neutral-900 px-3.5 py-3 sm:py-2.5 text-base sm:text-xs rounded-xl focus:outline-none focus:border-neutral-900 transition-colors"
                     />
                   </div>
 
@@ -506,23 +499,23 @@ export default function CheckoutPage() {
                       }
                     }}
                     disabled={!deliveryData.fullName || !deliveryData.phone || !deliveryData.address}
-                    className="w-full py-3.5 rounded-xl bg-white text-black hover:bg-neutral-200 font-semibold text-xs tracking-wider uppercase transition-colors disabled:opacity-40 min-h-[48px]"
+                    className="w-full py-3.5 rounded-xl bg-neutral-900 text-white hover:bg-neutral-800 font-semibold text-xs tracking-wider uppercase transition-colors disabled:opacity-40 min-h-[48px] shadow-sm"
                   >
                     Confirm Delivery Address
                   </button>
                 </div>
               ) : (
-                <div className="p-4 rounded-xl bg-[#12141a] border border-[#1f2128] text-xs flex items-center justify-between">
+                <div className="p-4 rounded-xl bg-neutral-50 border border-neutral-200 text-xs flex items-center justify-between">
                   <div>
-                    <div className="font-semibold text-white">{deliveryData.fullName}</div>
-                    <div className="text-neutral-400 mt-0.5">
+                    <div className="font-semibold text-neutral-900">{deliveryData.fullName}</div>
+                    <div className="text-neutral-600 mt-0.5">
                       {deliveryData.address}, {deliveryData.city}, {deliveryData.state}
                     </div>
                     <div className="text-neutral-500 font-mono mt-0.5">{deliveryData.phone}</div>
                   </div>
                   <button
                     onClick={() => setDeliveryConfirmed(false)}
-                    className="text-xs text-emerald-400 hover:underline"
+                    className="text-xs font-mono text-neutral-900 underline font-semibold"
                   >
                     Edit
                   </button>
@@ -532,63 +525,67 @@ export default function CheckoutPage() {
 
             {/* Step 3: Payment Gateway Trigger */}
             <div
-              className={`p-6 sm:p-8 rounded-2xl bg-[#0e0f14] border transition-opacity ${deliveryConfirmed ? "border-[#1f2128]" : "border-[#16171d] opacity-50 pointer-events-none"
-                }`}
+              className={`p-6 sm:p-8 rounded-2xl bg-white border shadow-sm transition-opacity ${
+                deliveryConfirmed ? "border-neutral-200/90" : "border-neutral-200 opacity-50 pointer-events-none"
+              }`}
             >
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-7 h-7 rounded-full bg-emerald-950 text-emerald-400 border border-emerald-800 flex items-center justify-center text-xs font-mono font-bold">
+                <div className="w-7 h-7 rounded-full bg-neutral-900 text-white flex items-center justify-center text-xs font-mono font-bold">
                   3
                 </div>
-                <h2 className="text-base font-bold text-white">Payment Method (Nigeria)</h2>
+                <h2 className="text-base font-bold text-neutral-900">Payment Method (Nigeria)</h2>
               </div>
 
               <div className="space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3">
                   <button
                     onClick={() => setPaymentMethod("card")}
-                    className={`p-3.5 sm:p-4 rounded-xl border flex sm:flex-col items-center gap-3 sm:gap-0 sm:text-center transition-all ${paymentMethod === "card"
-                      ? "bg-emerald-950/40 border-emerald-500 text-white"
-                      : "bg-[#121318] border-[#22242c] text-neutral-400"
-                      }`}
+                    className={`p-3.5 sm:p-4 rounded-xl border flex sm:flex-col items-center gap-3 sm:gap-0 sm:text-center transition-all ${
+                      paymentMethod === "card"
+                        ? "bg-neutral-900 border-neutral-900 text-white shadow-sm"
+                        : "bg-white border-neutral-200 text-neutral-600 hover:border-neutral-400"
+                    }`}
                   >
-                    <CreditCard className="w-5 h-5 sm:mx-auto sm:mb-2 text-emerald-400 flex-shrink-0" />
+                    <CreditCard className={`w-5 h-5 sm:mx-auto sm:mb-2 flex-shrink-0 ${paymentMethod === "card" ? "text-white" : "text-neutral-900"}`} />
                     <div className="text-left sm:text-center">
                       <span className="text-xs font-semibold block">Debit Card</span>
-                      <span className="text-[10px] text-neutral-500 font-mono">Mastercard/Visa/Verve</span>
+                      <span className={`text-[10px] font-mono ${paymentMethod === "card" ? "text-neutral-400" : "text-neutral-500"}`}>Mastercard/Visa/Verve</span>
                     </div>
                   </button>
 
                   <button
                     onClick={() => setPaymentMethod("transfer")}
-                    className={`p-3.5 sm:p-4 rounded-xl border flex sm:flex-col items-center gap-3 sm:gap-0 sm:text-center transition-all ${paymentMethod === "transfer"
-                      ? "bg-emerald-950/40 border-emerald-500 text-white"
-                      : "bg-[#121318] border-[#22242c] text-neutral-400"
-                      }`}
+                    className={`p-3.5 sm:p-4 rounded-xl border flex sm:flex-col items-center gap-3 sm:gap-0 sm:text-center transition-all ${
+                      paymentMethod === "transfer"
+                        ? "bg-neutral-900 border-neutral-900 text-white shadow-sm"
+                        : "bg-white border-neutral-200 text-neutral-600 hover:border-neutral-400"
+                    }`}
                   >
-                    <Building className="w-5 h-5 sm:mx-auto sm:mb-2 text-emerald-400 flex-shrink-0" />
+                    <Building className={`w-5 h-5 sm:mx-auto sm:mb-2 flex-shrink-0 ${paymentMethod === "transfer" ? "text-white" : "text-neutral-900"}`} />
                     <div className="text-left sm:text-center">
                       <span className="text-xs font-semibold block">Bank Transfer</span>
-                      <span className="text-[10px] text-neutral-500 font-mono">Instant Virtual Account</span>
+                      <span className={`text-[10px] font-mono ${paymentMethod === "transfer" ? "text-neutral-400" : "text-neutral-500"}`}>Instant Virtual Account</span>
                     </div>
                   </button>
 
                   <button
                     onClick={() => setPaymentMethod("ussd")}
-                    className={`p-3.5 sm:p-4 rounded-xl border flex sm:flex-col items-center gap-3 sm:gap-0 sm:text-center transition-all ${paymentMethod === "ussd"
-                      ? "bg-emerald-950/40 border-emerald-500 text-white"
-                      : "bg-[#121318] border-[#22242c] text-neutral-400"
-                      }`}
+                    className={`p-3.5 sm:p-4 rounded-xl border flex sm:flex-col items-center gap-3 sm:gap-0 sm:text-center transition-all ${
+                      paymentMethod === "ussd"
+                        ? "bg-neutral-900 border-neutral-900 text-white shadow-sm"
+                        : "bg-white border-neutral-200 text-neutral-600 hover:border-neutral-400"
+                    }`}
                   >
-                    <Smartphone className="w-5 h-5 sm:mx-auto sm:mb-2 text-emerald-400 flex-shrink-0" />
+                    <Smartphone className={`w-5 h-5 sm:mx-auto sm:mb-2 flex-shrink-0 ${paymentMethod === "ussd" ? "text-white" : "text-neutral-900"}`} />
                     <div className="text-left sm:text-center">
                       <span className="text-xs font-semibold block">USSD Banking</span>
-                      <span className="text-[10px] text-neutral-500 font-mono">*Bank Code#</span>
+                      <span className={`text-[10px] font-mono ${paymentMethod === "ussd" ? "text-neutral-400" : "text-neutral-500"}`}>*Bank Code#</span>
                     </div>
                   </button>
                 </div>
 
-                <div className="p-4 rounded-xl bg-[#090a0d] border border-[#1b1c23] text-xs text-neutral-400 flex items-center gap-3">
-                  <Lock className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                <div className="p-4 rounded-xl bg-neutral-50 border border-neutral-200 text-xs text-neutral-600 flex items-center gap-3">
+                  <Lock className="w-4 h-4 text-neutral-900 flex-shrink-0" />
                   <span>
                     Secured by 256-bit bank encryption. Official Nigerian Payment Gateway integration with server-side validation.
                   </span>
@@ -597,7 +594,7 @@ export default function CheckoutPage() {
                 <button
                   onClick={handleCompleteOrder}
                   disabled={isProcessingPayment}
-                  className="w-full py-4 px-6 rounded-xl bg-white text-black hover:bg-neutral-200 font-bold text-xs tracking-wider uppercase flex items-center justify-center gap-2 transition-colors shadow-xl shadow-white/5 disabled:opacity-50"
+                  className="w-full py-4 px-6 rounded-xl bg-neutral-900 text-white hover:bg-neutral-800 font-bold text-xs tracking-wider uppercase flex items-center justify-center gap-2 transition-colors shadow-sm disabled:opacity-50"
                 >
                   {isProcessingPayment ? (
                     "Verifying Transaction..."
@@ -612,10 +609,10 @@ export default function CheckoutPage() {
             </div>
           </div>
 
-          {/* Right Column: Order Summary (PRD §8.3) */}
+          {/* Right Column: Order Summary */}
           <div className="lg:col-span-5">
-            <div className="p-6 rounded-2xl bg-[#0e0f14] border border-[#1f2128] sticky top-28 space-y-5">
-              <h3 className="text-base font-bold text-white border-b border-[#1c1d22] pb-4">
+            <div className="p-6 rounded-2xl bg-white border border-neutral-200/90 shadow-sm sticky top-28 space-y-5">
+              <h3 className="text-base font-bold text-neutral-900 border-b border-neutral-100 pb-4">
                 Order Summary ({totalItems} {totalItems === 1 ? "item" : "items"})
               </h3>
 
@@ -623,7 +620,7 @@ export default function CheckoutPage() {
               <div className="space-y-3 max-h-64 overflow-y-auto">
                 {cart.map((item) => (
                   <div key={item.product.id} className="flex gap-3 items-center">
-                    <div className="relative w-12 h-12 rounded-lg bg-[#0a0a0c] border border-[#1c1d22] flex-shrink-0 p-1">
+                    <div className="relative w-12 h-12 rounded-lg bg-neutral-50 border border-neutral-200 flex-shrink-0 p-1">
                       <Image
                         src={item.product.heroImage}
                         alt={item.product.name}
@@ -633,10 +630,10 @@ export default function CheckoutPage() {
                       />
                     </div>
                     <div className="flex-1 min-w-0 text-xs">
-                      <div className="font-medium text-white truncate">{item.product.name}</div>
+                      <div className="font-medium text-neutral-900 truncate">{item.product.name}</div>
                       <div className="text-neutral-500 font-mono">Qty: {item.quantity}</div>
                     </div>
-                    <div className="text-xs font-mono font-semibold text-neutral-200">
+                    <div className="text-xs font-mono font-semibold text-neutral-900">
                       {formatPrice(item.product.price * item.quantity)}
                     </div>
                   </div>
@@ -644,24 +641,24 @@ export default function CheckoutPage() {
               </div>
 
               {/* Price Calculation Breakdown */}
-              <div className="border-t border-[#1c1d22] pt-4 space-y-2 text-xs">
-                <div className="flex justify-between text-neutral-400">
+              <div className="border-t border-neutral-100 pt-4 space-y-2 text-xs">
+                <div className="flex justify-between text-neutral-600">
                   <span>Subtotal</span>
-                  <span className="font-mono text-neutral-200">{formatPrice(subtotal)}</span>
+                  <span className="font-mono text-neutral-900">{formatPrice(subtotal)}</span>
                 </div>
-                <div className="flex justify-between text-neutral-400">
+                <div className="flex justify-between text-neutral-600">
                   <span>Delivery ({deliveryData.state})</span>
-                  <span className="font-mono text-neutral-200">{formatPrice(deliveryFee)}</span>
+                  <span className="font-mono text-neutral-900">{formatPrice(deliveryFee)}</span>
                 </div>
-                <div className="border-t border-[#1f2026] pt-3 flex justify-between text-sm font-bold text-white">
+                <div className="border-t border-neutral-200 pt-3 flex justify-between text-sm font-bold text-neutral-900">
                   <span>Total Amount</span>
-                  <span className="font-mono text-emerald-400">{formatPrice(orderTotal)}</span>
+                  <span className="font-mono text-neutral-900">{formatPrice(orderTotal)}</span>
                 </div>
               </div>
 
-              <div className="p-3 rounded-lg bg-[#121318] border border-[#1e2026] text-[11px] text-neutral-400 space-y-1">
-                <div className="flex items-center gap-1.5 text-neutral-300 font-semibold">
-                  <Truck className="w-3.5 h-3.5 text-emerald-400" />
+              <div className="p-3 rounded-lg bg-neutral-50 border border-neutral-200 text-[11px] text-neutral-600 space-y-1">
+                <div className="flex items-center gap-1.5 text-neutral-900 font-semibold">
+                  <Truck className="w-3.5 h-3.5 text-neutral-900" />
                   Fast Track Fulfillment
                 </div>
                 <p>Orders dispatched within 24 hours from our Lagos distribution hub.</p>

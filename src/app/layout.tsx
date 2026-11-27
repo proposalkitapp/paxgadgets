@@ -6,15 +6,14 @@ import { CartProvider } from "@/context/CartContext";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import CartDrawer from "@/components/cart/CartDrawer";
-import AnalyticsInspector from "@/components/analytics/AnalyticsInspector";
 
 const geistSans = { variable: "--font-geist-sans" };
 const geistMono = { variable: "--font-geist-mono" };
 
 export const metadata: Metadata = {
-  title: `${brandConfig.name} | High-Performance Consumer Technology`,
-  description: "Official digital storefront for premium engineered power banks, acoustics, and consumer technology accessories in Nigeria.",
-  keywords: ["power bank Nigeria", "fast charge power bank", "consumer technology", "audio gadgets Lagos"],
+  title: `${brandConfig.name} | Portable Power & Industrial Hardware`,
+  description: "Precision-engineered portable power banks with fast-charging Li-Polymer cells, digital metering, and unibody charcoal alloy.",
+  keywords: ["power bank Nigeria", "fast charge power bank", "PAX Gadgets", "portable charger Lagos"],
 };
 
 export default function RootLayout({
@@ -27,14 +26,13 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-[#08090a] text-neutral-100 font-sans selection:bg-emerald-500/20 selection:text-emerald-300">
+      <body className="min-h-full flex flex-col bg-[#fafafa] text-neutral-900 font-sans selection:bg-neutral-900 selection:text-white">
         <CartProvider>
           <Suspense fallback={<div className="h-16" />}>
             <Navbar />
           </Suspense>
           <CartDrawer />
           <main className="flex-1">{children}</main>
-          <AnalyticsInspector />
           <Footer />
         </CartProvider>
       </body>
